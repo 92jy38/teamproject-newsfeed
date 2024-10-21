@@ -1,6 +1,7 @@
 package com.sparta.newsfeed_project.domain.common.dto;
 
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -8,17 +9,20 @@ import org.springframework.http.HttpStatus;
  *
  * @since 2024-10-21
  */
+@Getter
+@Setter
+@AllArgsConstructor
 public class ResponseStatusDto {
-    private final HttpStatus state;
+    private final int state;
     private final String message;
 
     public ResponseStatusDto(ResponseCode responseCode) {
-        state = responseCode.getHttpStatus();
+        state = responseCode.getHttpStatus().value();
         message = responseCode.getMessage();
     }
 
     public ResponseStatusDto(ResponseCode responseCode, String message) {
-        state = responseCode.getHttpStatus();
+        state = responseCode.getHttpStatus().value();
         this.message = responseCode.getMessage() + ": " + message;
     }
 }
