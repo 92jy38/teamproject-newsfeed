@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 유저 삭제 요청 DTO 클래스
@@ -25,9 +26,10 @@ public class RequestRemoveMemberDto {
      * @return 생성된 Member 엔티티 객체
      * @since 2024-10-21
      */
-    public Member from(RequestRemoveMemberDto requestDto, Long id) {
+    public Member from(RequestRemoveMemberDto requestDto, Member member) {
         return Member.builder()
-                .id(id)
-                .password(requestDto.getPassword()).build();
+                .id(member.getId())
+                .password(requestDto.getPassword())
+                .isDeleted(true).build();
     }
 }
