@@ -1,6 +1,7 @@
 package com.sparta.newsfeed_project.domain.member.entity;
 
 import com.sparta.newsfeed_project.domain.common.entity.Timestamped;
+import com.sparta.newsfeed_project.domain.member.dto.RequestModifyMemberDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,26 +43,15 @@ public class Member extends Timestamped {
     @ColumnDefault("false")
     private boolean isDeleted;
 
-//    @OneToMany(mappedBy = "members",
-//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-//            orphanRemoval = true)
-//    private List<Schedule> schedules = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "CascadeType",
-//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-//            orphanRemoval = true)
-//    private List<Comment> comments = new ArrayList<>();
-
-    public void update(Member member) {
-        this.email = member.getEmail();
-        this.password = member.getPassword();
-        this.nickname = member.getNickname();
-        this.username = member.getUsername();
-        this.introduce = member.getIntroduce();
-        this.isDeleted = member.isDeleted();
+    public void update(RequestModifyMemberDto dto) {
+        this.email = dto.getEmail();
+        this.password = dto.getNewPassword();
+        this.nickname = dto.getNickname();
+        this.username = dto.getUsername();
+        this.introduce = dto.getIntroduce();
     }
 
-    public void setUserDelete(boolean isDeleted) {
+    public void setIsDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 }

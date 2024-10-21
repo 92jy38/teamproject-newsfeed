@@ -30,10 +30,10 @@ public class ResponseMemberDto {
      * @return 생성된 응답 DTO 객체 (UserResponseDto)
      * @since 2024-10-21
      */
-    public static ResponseMemberDto create(Member member, ResponseCode responseCode) {
+    public static ResponseMemberDto create(Member member, boolean hiddenInfo, ResponseCode responseCode) {
         return ResponseMemberDto.builder()
                 .status(new ResponseStatusDto(responseCode))
-                .user(MemberDto.from(member))
+                .user(MemberDto.from(member, hiddenInfo))
                 .build();
     }
 

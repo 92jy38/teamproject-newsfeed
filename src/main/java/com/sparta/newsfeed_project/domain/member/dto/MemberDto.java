@@ -24,7 +24,8 @@ public class MemberDto {
     private String email;
     private String password;
     private String nickname;
-    private String name;
+    private String username;
+    private String introduce;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 
@@ -33,16 +34,25 @@ public class MemberDto {
      *
      * @param member 변환할 User 엔티티 객체
      * @return 변환된 UserDto 객체
-     * @since 2024-10-18
+     * @since 2024-10-21
      */
-    public static MemberDto from(Member member) {
-        return MemberDto.builder()
-                .id(member.getId())
-                .email(member.getEmail())
-                .password(member.getPassword())
-                .nickname(member.getNickname())
-                .name(member.getUsername())
-                .createAt(member.getCreateAt())
-                .updateAt(member.getUpdateAt()).build();
+    public static MemberDto from(Member member, boolean hiddenInfo) {
+        if(hiddenInfo) {
+            return MemberDto.builder()
+                    .id(member.getId())
+                    .email(member.getEmail())
+                    .nickname(member.getNickname())
+                    .username(member.getUsername()).build();
+        }
+        else {
+            return MemberDto.builder()
+                    .id(member.getId())
+                    .email(member.getEmail())
+                    .password(member.getPassword())
+                    .nickname(member.getNickname())
+                    .username(member.getUsername())
+                    .createAt(member.getCreateAt())
+                    .updateAt(member.getUpdateAt()).build();
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.sparta.newsfeed_project.domain.member.dto;
 
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,21 +16,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class RequestRemoveMemberDto {
-    @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(min = 8, max = 50, message = "비밀번호는 8~50자 사이입니다.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,50}$",
+            message = "비밀번호는 [8 ~ 50]글자 이내이며, [영문 + 숫자 + 특수문자]를 최소 1글자씩 포함해야 합니다.")
     private String password;
-
-    /**
-     * DTO 객체를 Member 엔티티 객체로 변환합니다.
-     *
-     * @param requestDto 삭제 요청 DTO
-     * @return 생성된 Member 엔티티 객체
-     * @since 2024-10-21
-     */
-    public Member from(RequestRemoveMemberDto requestDto, Member member) {
-        return Member.builder()
-                .id(member.getId())
-                .password(requestDto.getPassword())
-                .isDeleted(true).build();
-    }
 }

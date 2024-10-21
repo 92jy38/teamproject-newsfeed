@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ResponseCode {
-    SUCCESS_LOGIN(HttpStatus.OK, "로그인 성ㅇㅇㅇ공"),
+    SUCCESS_LOGIN(HttpStatus.OK, "로그인 성공"),
     SUCCESS_LOGOUT(HttpStatus.OK, "로그 아웃 성공"),
 
     SUCCESS_CREATE_USER(HttpStatus.CREATED, "회원 가입 성공"),
@@ -23,6 +23,7 @@ public enum ResponseCode {
 
     // 사용자 관련 에러 코드
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
+    USER_DELETED(HttpStatus.NOT_FOUND, "이미 탈퇴한 유저입니다.."),
     USER_PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
     USER_PASSWORD_DUPLICATED(HttpStatus.CONFLICT, "비밀번호가 중복됩니다"),
     USER_EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이메일이 중복됩니다"),
@@ -52,8 +53,10 @@ public enum ResponseCode {
     TOKEN_UNSIGNED(HttpStatus.BAD_REQUEST, "유효하지 않는 JWT 서명 입니다."),
     TOKEN_INVALID(HttpStatus.BAD_REQUEST, "잘못된 JWT 토큰 입니다."),
     TOKEN_TIMEOUT(HttpStatus.UNAUTHORIZED, "만료된 JWT token 입니다."),
-    TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 JWT 토큰 입니다.");
+    TOKEN_UNSUPPORTED(HttpStatus.UNAUTHORIZED, "지원하지 않는 JWT 토큰 입니다."),
 
+    // 기타 에러 코드
+    BAD_INPUT(HttpStatus.BAD_REQUEST, "잘못된 값 입력");
 
     private final HttpStatus httpStatus;
     private final String message;
