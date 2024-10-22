@@ -24,6 +24,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
     // 댓글 생성
+    // 예외처리 수정 요망
     @Transactional
     public ResponseCommentDto createComment(Long postId, RequestCommentDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())
