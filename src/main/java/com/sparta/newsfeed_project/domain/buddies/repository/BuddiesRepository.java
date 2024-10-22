@@ -19,5 +19,6 @@ public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
     @Query("select b.toUserId from Buddies b where b.fromUserId = :memberId and b.approved = true ")
     List<Long> findIdListByFromUserId(@Param("memberId") Long memberId);
 
+    Buddies findByFromUserID(Long fromUserId);
 
 }

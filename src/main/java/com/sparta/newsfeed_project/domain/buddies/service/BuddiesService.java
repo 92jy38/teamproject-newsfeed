@@ -6,6 +6,7 @@ import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +64,11 @@ public class BuddiesService {
         return buddies.stream().map(Buddies::to).toList();
     }
 
-    private List<ResponseBuddiesDto> createList(Buddies buddies, Buddies acceptBuddies){
-        List<ResponseBuddiesDto> buddiesDtos = new ArrayList<>();
-        buddiesDtos.add(buddies.to());
-        buddiesDtos.add(acceptBuddies.to());
-        return buddiesDtos;
+
+    public void deletedBuddies(Long memberId) {
+        Buddies fromUser= buddiesRepository.findByFromUserID(memberId);
+        Buddies toUser = buddiesRepository.findByFromUserID(fromUser.getToUserId());
+        buddiesRepository.delete(fromUser);
+        buddiesRepository.delete(toUser);
     }
 }
