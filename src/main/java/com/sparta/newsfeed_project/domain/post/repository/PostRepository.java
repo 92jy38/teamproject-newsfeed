@@ -14,5 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.member.id IN :idArray")
     Page<Post> findAllPost(@Param("idArray") List<Long> idArray, Pageable pageable);
 
+    Long countByMemberId(Long id);
 
+    List<Post> findAllByMemberId(Long id);
 }

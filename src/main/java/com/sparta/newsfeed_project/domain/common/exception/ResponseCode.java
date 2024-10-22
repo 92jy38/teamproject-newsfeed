@@ -33,7 +33,7 @@ public enum ResponseCode {
     // 사용자 관련 에러 코드
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
     MEMBER_DELETE(HttpStatus.NOT_FOUND, "이미 탈퇴한 유저입니다."),
-    MEMBER_PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
+    MEMBER_PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
     MEMBER_PASSWORD_DUPLICATED(HttpStatus.CONFLICT, "비밀번호가 중복됩니다"),
     MEMBER_EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이메일이 중복됩니다"),
 
