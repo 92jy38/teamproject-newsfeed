@@ -18,8 +18,8 @@ public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
 
     boolean existsByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
 
-    @Query("select b.fromUserId from Buddies b where b.toUserId = :memberId and b.approved = true ")
-    List<Long> findAllIdByFromUserId(@Param("memberId") Long memberId);
+    @Query("select b.toUserId from Buddies b where b.fromUserId = :memberId and b.approved = true ")
+    List<Long> findIdListByFromUserId(@Param("memberId") Long memberId);
 
 
 }
