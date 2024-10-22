@@ -48,10 +48,10 @@ public class Member extends Timestamped {
     private boolean deleted;
 
     // === temp code
-    @OneToMany(mappedBy = "member",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            orphanRemoval = true)
-    private List<TempPost> posts = new ArrayList<>();
+//    @OneToMany(mappedBy = "member",
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+//            orphanRemoval = true)
+//    private List<TempPost> posts = new ArrayList<>();
     // ===
 
     public void update(RequestModifyMemberDto dto) {
