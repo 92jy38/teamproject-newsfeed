@@ -12,6 +12,6 @@ public class RequestCommentDto {
     @Size(min = 1, max = 255, message = "댓글은 1자 이상 255자 이하만 가능합니다")
     private String content;
 
-    @NotNull(message = "작성자 ID는 필수입니다.")
-    private Long memberId;
+//    @NotNull(message = "작성자 ID는 필수입니다.")
+//    private Long memberId;
 }
