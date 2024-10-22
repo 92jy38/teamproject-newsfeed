@@ -19,7 +19,7 @@ public class BuddyDto {
                 .id(buddies.getId())
                 .fromUesrId(buddies.getFromUesrId())
                 .toUserId(buddies.getToUserId())
-                .approved(buddies.isAppoved()).build();
+                .approved(buddies.isApproved()).build();
     }
 
 }

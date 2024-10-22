@@ -24,7 +24,7 @@ public class Buddies {
     private Long toUserId;
 
     @Column
-    private boolean appoved;
+    private boolean approved;
 
     public static Buddies from(RequestBuddiesDto request) {
         Buddies buddies = new Buddies();
@@ -35,7 +35,7 @@ public class Buddies {
     private void init(RequestBuddiesDto request) {
         this.fromUesrId = request.getFromUesrId();
         this.toUserId = request.getToUserId();
-        this.appoved = request.isApproved();
+        this.approved = request.isApproved();
     }
 
     public static Buddies upend(RequestBuddiesDto request) {
@@ -47,7 +47,7 @@ public class Buddies {
     private void initUpend(RequestBuddiesDto request) {
         this.fromUesrId = request.getToUserId();
         this.toUserId = request.getFromUesrId();
-        this.appoved = false;
+        this.approved = false;
     }
 
     public ResponseBuddiesDto to() {
@@ -55,11 +55,11 @@ public class Buddies {
                 id,
                 fromUesrId,
                 toUserId,
-                appoved
+                approved
         );
     }
 
     public void Appoved(boolean b) {
-        this.appoved = b;
+        this.approved = b;
     }
 }

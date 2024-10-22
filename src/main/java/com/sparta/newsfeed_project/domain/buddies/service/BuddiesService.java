@@ -24,7 +24,7 @@ public class BuddiesService {
     }
 
     public List<ResponseBuddiesDto> getBuddies(Long memberId) {
-        List<Buddies> buddies = buddiesRepository.findAllByFromUesrId(memberId);
+        List<Buddies> buddies = buddiesRepository.findAllByFromUesrIdOrToUserId(memberId,memberId);
         return buddies.stream().map(Buddies::to).toList();
     }
     ;
@@ -42,7 +42,7 @@ public class BuddiesService {
         buddies.Appoved(false);
         Buddies buddy = buddiesRepository
                 .findOneByFromUesrIdAndToUserId(requestBuddiesDto.getToUserId(), requestBuddiesDto.getFromUesrId());
-        if(buddies.isAppoved() == buddy.isAppoved()){
+        if(buddies.isApproved() == buddy.isApproved()){
             buddiesRepository.delete(buddy);
             buddiesRepository.delete(buddies);
         }else{

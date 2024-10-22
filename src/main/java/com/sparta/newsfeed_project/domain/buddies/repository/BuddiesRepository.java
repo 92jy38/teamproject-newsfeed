@@ -8,7 +8,8 @@ import java.util.Optional;
 
 public interface BuddiesRepository extends JpaRepository <Buddies,Long> {
 
-    List<Buddies> findAllByFromUesrId(Long memberId);
+    List<Buddies> findAllByFromUesrIdOrToUserId(Long memberId, Long buddyId);
 
     Buddies findOneByFromUesrIdAndToUserId(Long memberId, Long buddyId);
+
 }
