@@ -12,6 +12,7 @@ public class ResponsePostDto {
     private Long id;
     private String caption;
     private String imgUrl;
+    private String nickname;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 }
