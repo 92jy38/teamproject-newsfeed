@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
@@ -20,12 +22,13 @@ public class CommentController {
     public ResponseEntity<ResponseCommentDto> createComment(@PathVariable("postId") Long postId, @Valid @RequestBody RequestCommentDto requestDto) {
         ResponseCommentDto responseDto = commentService.createComment(postId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-
     }
-    @GetMapping("/{postId}")
-    public ResponseEntity<ResponseCommentDto> getComment(@PathVariable("postId") Long postId) {
-        ResponseCommentDto responseDto = commentService.getComment(postId);
-        return ResponseEntity.ok(responseDto);
+
+    // 게시글에 대한 모든 댓글을 조회하는 메서드
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<List<ResponseCommentDto>> getCommentsByPostId(@PathVariable("postId") Long postId) {
+        List<ResponseCommentDto> responseDtos = commentService.getCommentsByPostId(postId);
+        return ResponseEntity.ok(responseDtos);
     }
 
     @PutMapping("/{commentId}")

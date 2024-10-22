@@ -9,9 +9,11 @@ import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.entity.Post;
 import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +37,13 @@ public class CommentService {
         return new ResponseCommentDto(comment);
     }
 
-
-    // 댓글 조회
+    // 게시글에 대한 모든 댓글 조회
     @Transactional(readOnly = true)
-    public ResponseCommentDto getComment(Long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-        return new ResponseCommentDto(comment);
+    public List<ResponseCommentDto> getCommentsByPostId(Long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        return comments.stream()
+                .map(ResponseCommentDto::new)
+                .collect(Collectors.toList());
     }
 
     // 댓글 수정

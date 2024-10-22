@@ -14,8 +14,4 @@ public class RequestCommentDto {
 
     @NotNull(message = "작성자 ID는 필수입니다.")
     private Long memberId;
-
-//    @NotNull(message = "게시글 ID는 필수입니다.")
-//    private Long postId;
 }
-//사이즈 추가??
