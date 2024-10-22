@@ -69,15 +69,16 @@ public class MemberController {
     /**
      * 회원 정보 조회 API
      *
-     * @param req HttpServletRequest
+     * @param req      HttpServletRequest
+     * @param memberId 멤버 ID
      * @return 회원 정보 조회 결과
      * @since 2023-10-21
      */
-    @GetMapping("/members")
-    public ResponseEntity<ResponseMemberDto> getUserInfo(HttpServletRequest req, @RequestBody RequestSearchMemberDto requestDto) throws ResponseException {
+    @GetMapping("/members/{memberId}")
+    public ResponseEntity<ResponseMemberDto> getUserInfo(HttpServletRequest req, @PathVariable Long memberId) throws ResponseException {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(memberService.searchMember(req, requestDto));
+                .body(memberService.searchMember(req, memberId));
     }
 
     /**

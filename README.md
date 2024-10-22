@@ -8,13 +8,3 @@
   spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
 위와 같이 `DB Connection` 을 적어준다.
-
-##### 💫 Dependencies
-- `Lombok`
-- `thymeleaf`
-- `Spring Web`
-- `JDBC API`
-- `Spring Data JPA`
-- `MySQL Driver`
-- `Validation`
-- `Spring Security`

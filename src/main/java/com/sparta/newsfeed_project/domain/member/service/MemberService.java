@@ -50,7 +50,7 @@ public class MemberService {
     public void validateCreateInfo(Member user) throws ResponseException {
         Member findMember = memberRepository.findByEmail(user.getEmail());
         if (findMember != null)
-            throw new ResponseException(ResponseCode.USER_EMAIL_DUPLICATED);
+            throw new ResponseException(ResponseCode.MEMBER_EMAIL_DUPLICATED);
     }
 
     /**
@@ -89,11 +89,11 @@ public class MemberService {
      */
     public void validateLoginInfo(Member loginMember, Member findUser) throws ResponseException {
         if (findUser == null)
-            throw new ResponseException(ResponseCode.USER_NOT_FOUND);
-            // TODO. 암호화된 비밀번호와 비교 필요
-            // else if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
+            throw new ResponseException(ResponseCode.MEMBER_NOT_FOUND);
+        // TODO. 암호화된 비밀번호와 비교 필요
+        // else if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
         else if (!loginMember.getPassword().equals(findUser.getPassword()))
-            throw new ResponseException(ResponseCode.USER_PASSWORD_NOT_MATCH);
+            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
     }
 
     /**
@@ -103,12 +103,13 @@ public class MemberService {
      * @return 회원 조회 결과 (UserResponseDto)
      * @since 2024-10-21
      */
-    public ResponseMemberDto searchMember(HttpServletRequest req, RequestSearchMemberDto requestDto) throws ResponseException {
+    public ResponseMemberDto searchMember(HttpServletRequest req, Long id) throws ResponseException {
         // TODO. khj jwt 완성시 아래 주석으로 대체
         // Member loginMember = (Member) req.getAttribute("member");
         Member loginMember = Member.builder().id(1L).build();
         Member findMember = findById(loginMember.getId());
-        boolean hiddenInfo = !Objects.equals(loginMember.getId(), requestDto.getId());
+        boolean hiddenInfo = !Objects.equals(loginMember.getId(), id);
+        // TODO. khj 포스팅 수 친구 수 가져오는 기능 추가 구현 필요
         return ResponseMemberDto.create(findMember, hiddenInfo, ResponseCode.SUCCESS_SEARCH_USER);
     }
 
@@ -146,9 +147,9 @@ public class MemberService {
         // TODO. khj 그 뭐냐....ㅠㅠ 암튼 그거 비밀번호 암호..?
         // if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
         if (!requestDto.getPassword().equals(loginMember.getPassword()))
-            throw new ResponseException(ResponseCode.USER_PASSWORD_NOT_MATCH);
+            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
         else if (requestDto.getNewPassword().equals(loginMember.getPassword()))
-            throw new ResponseException(ResponseCode.USER_PASSWORD_DUPLICATED);
+            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_DUPLICATED);
     }
 
     /**
@@ -166,11 +167,11 @@ public class MemberService {
         Member loginMember = Member.builder().id(1L).password("Admin123!").build();
         // TODO. khj 암호화.. 어쩌구..
         if (!loginMember.getPassword().equals(requestDto.getPassword()))
-            throw new ResponseException(ResponseCode.USER_PASSWORD_NOT_MATCH);
+            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
 
         Member deleteMember = findById(loginMember.getId());
         if (deleteMember.isDeleted())
-            throw new ResponseException(ResponseCode.USER_DELETED);
+            throw new ResponseException(ResponseCode.MEMBER_DELETE);
 
         deleteMember.delete(true);
         return new ResponseStatusDto(ResponseCode.SUCCESS_DELETE_USER);
@@ -185,7 +186,11 @@ public class MemberService {
      * @since 2024-10-23
      */
     private Member findById(Long id) throws ResponseException {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new ResponseException(ResponseCode.USER_NOT_FOUND));
+        Member member = memberRepository.findById(id).orElse(null);
+        if (member == null)
+            throw new ResponseException(ResponseCode.MEMBER_NOT_FOUND);
+        else if(member.isDeleted())
+            throw new ResponseException(ResponseCode.MEMBER_DELETE);
+        return member;
     }
 }

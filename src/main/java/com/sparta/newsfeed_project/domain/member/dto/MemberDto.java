@@ -26,6 +26,8 @@ public class MemberDto {
     private String nickname;
     private String username;
     private String introduce;
+    private int buddyCount;
+    private int postCount;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 
@@ -34,7 +36,7 @@ public class MemberDto {
      *
      * @param member     변환할 User 엔티티 객체
      * @param hiddenInfo 숨길 정보 여부
-     * @return 변환된 UserDto 객체
+     * @return 변환된 MemberDto 객체
      * @since 2024-10-21
      */
     public static MemberDto from(Member member, boolean hiddenInfo) {
@@ -42,8 +44,7 @@ public class MemberDto {
             return MemberDto.builder()
                     .id(member.getId())
                     .email(member.getEmail())
-                    .nickname(member.getNickname())
-                    .username(member.getUsername()).build();
+                    .nickname(member.getNickname()).build();
         } else {
             return MemberDto.builder()
                     .id(member.getId())
