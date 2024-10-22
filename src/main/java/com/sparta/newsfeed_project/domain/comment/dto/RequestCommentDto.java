@@ -12,6 +12,8 @@ public class RequestCommentDto {
     @Size(min = 1, max = 255, message = "댓글은 1자 이상 255자 이하만 가능합니다")
     private String content;
 
-//    @NotNull(message = "작성자 ID는 필수입니다.")
-//    private Long memberId;
+    // CommentService 에서 memberId를 호출하기 때문에 다시 주석처리 해제
+    @NotNull(message = "작성자 ID는 필수입니다.")
+    private Long memberId;
+
 }
