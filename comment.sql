@@ -1,0 +1,11 @@
+CREATE TABLE comment (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content VARCHAR(255) NOT NULL,
+    post_id BIGINT NOT NULL,
+    member_id BIGINT NOT NULL,
+    created_at DATETIME CURRENT_TIMESTAMP,
+    updated_at DATETIME CURRENT_TIMESTAMP, UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
+    // 포스트 삭제와 회원 탈퇴시 댓글 자동 삭제?
+);
