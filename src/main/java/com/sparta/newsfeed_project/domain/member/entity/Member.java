@@ -1,12 +1,15 @@
+package com.sparta.newsfeed_project.domain.member.entity;
+
+import com.sparta.newsfeed_project.domain.comment.entity.Comment;
 import com.sparta.newsfeed_project.domain.common.entity.Timestamped;
 import com.sparta.newsfeed_project.domain.member.dto.RequestModifyMemberDto;
+import com.sparta.newsfeed_project.domain.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +26,12 @@ import java.util.List;
 @Entity
 @Table(name = "member")
 public class Member extends Timestamped {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 50)
     private String email;
-
 
     @Column(nullable = false)
     private String password;
@@ -47,12 +48,15 @@ public class Member extends Timestamped {
     @ColumnDefault("false")
     private boolean deleted;
 
-    // === temp code
-//    @OneToMany(mappedBy = "member",
-//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-//            orphanRemoval = true)
-//    private List<TempPost> posts = new ArrayList<>();
-    // ===
+    @OneToMany(mappedBy = "member",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public void update(RequestModifyMemberDto dto) {
         this.email = dto.getEmail();
@@ -62,8 +66,8 @@ public class Member extends Timestamped {
         this.introduce = dto.getIntroduce();
     }
 
+    // 애애앵애ㅡ으
     public void delete() {
         this.deleted = true;
     }
-
 }
