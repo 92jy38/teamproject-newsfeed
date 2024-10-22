@@ -17,6 +17,11 @@ public class BuddiesConrtroller {
 
     private final BuddiesService buddiesService;
 
+    /*
+    * 친구 등록 API
+    * @param request 친구 Id 정보(Json형태)
+    * @return status(CREATED), body(입력된 친구 정보)
+    * */
 
     @PostMapping("/{memberId}")
     public ResponseEntity<ResponseBuddiesDto> createBuddies(@RequestBody RequestBuddiesDto requestBuddiesDto) {
@@ -47,11 +52,13 @@ public class BuddiesConrtroller {
                 .status(HttpStatus.OK)
                 .body(null);
     }
+
     @GetMapping("/List")
     public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddies() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(buddiesService.getBuddies());
     }
+
 
 }

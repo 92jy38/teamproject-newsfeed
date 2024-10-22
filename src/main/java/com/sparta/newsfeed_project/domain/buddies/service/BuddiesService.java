@@ -7,6 +7,7 @@ import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,7 +38,8 @@ public class BuddiesService {
 
     public void acceptBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = buddiesRepository
-                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
+                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(),
+                        requestBuddiesDto.getToUserId());
         buddies.Approved(true);
         buddiesRepository.save(buddies);
     }
@@ -61,6 +63,10 @@ public class BuddiesService {
         return buddies.stream().map(Buddies::to).toList();
     }
 
-
-
+    private List<ResponseBuddiesDto> createList(Buddies buddies, Buddies acceptBuddies){
+        List<ResponseBuddiesDto> buddiesDtos = new ArrayList<>();
+        buddiesDtos.add(buddies.to());
+        buddiesDtos.add(acceptBuddies.to());
+        return buddiesDtos;
+    }
 }

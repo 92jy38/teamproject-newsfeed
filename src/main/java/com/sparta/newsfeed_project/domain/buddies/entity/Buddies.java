@@ -58,7 +58,7 @@ public class Buddies {
         );
     }
 
-    public void Appoved(boolean approved) {
+    public void Approved(boolean approved) {
         this.approved = approved;
     }
 }
