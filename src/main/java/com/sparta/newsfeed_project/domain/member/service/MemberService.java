@@ -5,17 +5,13 @@ import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.member.dto.*;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
-import com.sparta.newsfeed_project.domain.member.entity.TempBuddy;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
-import com.sparta.newsfeed_project.domain.member.repository.TempBuddyRepository;
-import com.sparta.newsfeed_project.domain.member.repository.TempPostRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,8 +24,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final TempBuddyRepository buddyRepository;
-    private final TempPostRepository postRepository;
+//    private final TempBuddyRepository buddyRepository;
+//    private final TempPostRepository postRepository;
 
     /**
      * 회원가입을 처리합니다.
@@ -152,8 +148,9 @@ public class MemberService {
      * @return 친구 수
      */
     private int getBuddyCount(Long id) {
-        List<TempBuddy> buddies = buddyRepository.findByStateAndFromIdOrToId(true, id, id);
-        return buddies == null ? 0 : buddies.size() / 2;
+//        List<TempBuddy> buddies = buddyRepository.findByStateAndFromIdOrToId(true, id, id);
+//        return buddies == null ? 0 : buddies.size() / 2;
+        return 0;
     }
 
     /**
@@ -163,7 +160,8 @@ public class MemberService {
      * @return 게시물 수
      */
     private int getPostCount(Long id) {
-        return postRepository.countByMemberId(id).intValue();
+//        return postRepository.countByMemberId(id).intValue();
+        return 0;
     }
 
     /**
@@ -226,7 +224,18 @@ public class MemberService {
             throw new ResponseException(ResponseCode.MEMBER_DELETE);
 
         deleteMember.delete();
+        deleteBuddy(loginMember.getId());
+        deletePost(loginMember.getId());
+
         return new ResponseStatusDto(ResponseCode.SUCCESS_DELETE_USER);
+    }
+
+    private void deleteBuddy(Long id) {
+
+    }
+
+    private void deletePost(Long id) {
+
     }
 
     /**
@@ -234,7 +243,7 @@ public class MemberService {
      *
      * @param id 유저 id
      * @return 검색된 회원
-     * * @throws ResponseException 검색된 유저가 없을시 발생하는 예외
+     * @throws ResponseException 검색된 유저가 없을시 발생하는 예외
      * @since 2024-10-23
      */
     private Member findById(Long id) throws ResponseException {
