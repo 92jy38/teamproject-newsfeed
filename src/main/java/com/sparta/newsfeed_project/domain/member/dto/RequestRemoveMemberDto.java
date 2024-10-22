@@ -1,12 +1,8 @@
 package com.sparta.newsfeed_project.domain.member.dto;
 
-import com.sparta.newsfeed_project.domain.member.entity.Member;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 유저 삭제 요청 DTO 클래스

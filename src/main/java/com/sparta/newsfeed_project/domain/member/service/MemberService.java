@@ -83,15 +83,15 @@ public class MemberService {
      * 로그인 시 유저 정보를 검사합니다.
      *
      * @param loginMember 입력된 유저 정보
-     * @param findUser  조회된 유저 정보
+     * @param findUser    조회된 유저 정보
      * @throws ResponseException 유저 정보가 올바르지 않은 경우 예외를 발생시킵니다.
      * @since 2024-10-21
      */
     public void validateLoginInfo(Member loginMember, Member findUser) throws ResponseException {
         if (findUser == null)
             throw new ResponseException(ResponseCode.USER_NOT_FOUND);
-        // TODO. 암호화된 비밀번호와 비교 필요
-        // else if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
+            // TODO. 암호화된 비밀번호와 비교 필요
+            // else if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
         else if (!loginMember.getPassword().equals(findUser.getPassword()))
             throw new ResponseException(ResponseCode.USER_PASSWORD_NOT_MATCH);
     }
@@ -107,9 +107,7 @@ public class MemberService {
         // TODO. khj jwt 완성시 아래 주석으로 대체
         // Member loginMember = (Member) req.getAttribute("member");
         Member loginMember = Member.builder().id(1L).build();
-        Member findMember = memberRepository.findById(loginMember.getId())
-                .orElseThrow(() -> new ResponseException(ResponseCode.USER_NOT_FOUND));
-
+        Member findMember = findById(loginMember.getId());
         boolean hiddenInfo = !Objects.equals(loginMember.getId(), requestDto.getId());
         return ResponseMemberDto.create(findMember, hiddenInfo, ResponseCode.SUCCESS_SEARCH_USER);
     }
@@ -129,10 +127,7 @@ public class MemberService {
         // Member loginMember = (Member) req.getAttribute("member");
         Member loginMember = Member.builder().id(1L).password("1q2w3e4r#").build();
         validateUpdatePassword(requestDto, loginMember);
-
-        Member updateMember = memberRepository.findById(loginMember.getId())
-                .orElseThrow(() -> new ResponseException(ResponseCode.USER_NOT_FOUND));
-
+        Member updateMember = findById(loginMember.getId());
         // TODO. khj 암호화된 비밀번호 넣어줄 것.
         requestDto.setNewPassword(requestDto.getPassword());
         updateMember.update(requestDto);
@@ -142,7 +137,7 @@ public class MemberService {
     /**
      * 멤버 정보 수정 요청을 검증합니다.
      *
-     * @param requestDto 수정 데이터가 들어있는 DTO
+     * @param requestDto  수정 데이터가 들어있는 DTO
      * @param loginMember 로그인한 멤버 정보
      * @throws ResponseException 검증 실패 시 발생하는 예외
      * @since 2024-10-21
@@ -150,7 +145,7 @@ public class MemberService {
     private void validateUpdatePassword(RequestModifyMemberDto requestDto, Member loginMember) throws ResponseException {
         // TODO. khj 그 뭐냐....ㅠㅠ 암튼 그거 비밀번호 암호..?
         // if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
-        if(!requestDto.getPassword().equals(loginMember.getPassword()))
+        if (!requestDto.getPassword().equals(loginMember.getPassword()))
             throw new ResponseException(ResponseCode.USER_PASSWORD_NOT_MATCH);
         else if (requestDto.getNewPassword().equals(loginMember.getPassword()))
             throw new ResponseException(ResponseCode.USER_PASSWORD_DUPLICATED);
@@ -173,13 +168,25 @@ public class MemberService {
         if (!loginMember.getPassword().equals(requestDto.getPassword()))
             throw new ResponseException(ResponseCode.USER_PASSWORD_NOT_MATCH);
 
-        Member deleteMember = memberRepository.findById(loginMember.getId())
-                .orElseThrow(() -> new ResponseException(ResponseCode.USER_NOT_FOUND));
-        if(deleteMember.isDeleted())
+        Member deleteMember = findById(loginMember.getId());
+        if (deleteMember.isDeleted())
             throw new ResponseException(ResponseCode.USER_DELETED);
 
-        deleteMember.setIsDeleted(true);
+        deleteMember.delete(true);
         memberRepository.delete(deleteMember);
         return new ResponseStatusDto(ResponseCode.SUCCESS_DELETE_USER);
+    }
+
+    /**
+     * 멤버 번호로 유저를 조회합니다.
+     *
+     * @param id 유저 id
+     * @return 검색된 회원
+     * * @throws ResponseException 검색된 유저가 없을시 발생하는 예외
+     * @since 2024-10-23
+     */
+    private Member findById(Long id) throws ResponseException {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new ResponseException(ResponseCode.USER_NOT_FOUND));
     }
 }

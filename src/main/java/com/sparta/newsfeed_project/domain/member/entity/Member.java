@@ -51,7 +51,7 @@ public class Member extends Timestamped {
         this.introduce = dto.getIntroduce();
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void delete(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 }

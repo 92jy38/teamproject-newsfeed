@@ -32,19 +32,19 @@ public class MemberDto {
     /**
      * User 엔티티 객체를 UserDto 객체로 변환합니다.
      *
-     * @param member 변환할 User 엔티티 객체
+     * @param member     변환할 User 엔티티 객체
+     * @param hiddenInfo 숨길 정보 여부
      * @return 변환된 UserDto 객체
      * @since 2024-10-21
      */
     public static MemberDto from(Member member, boolean hiddenInfo) {
-        if(hiddenInfo) {
+        if (hiddenInfo) {
             return MemberDto.builder()
                     .id(member.getId())
                     .email(member.getEmail())
                     .nickname(member.getNickname())
                     .username(member.getUsername()).build();
-        }
-        else {
+        } else {
             return MemberDto.builder()
                     .id(member.getId())
                     .email(member.getEmail())
