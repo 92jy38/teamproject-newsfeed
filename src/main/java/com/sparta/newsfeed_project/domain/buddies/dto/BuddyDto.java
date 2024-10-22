@@ -1,3 +1,4 @@
+
 package com.sparta.newsfeed_project.domain.buddies.dto;
 
 import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
@@ -21,5 +22,6 @@ public class BuddyDto {
                 .toUserId(buddies.getToUserId())
                 .approved(buddies.isApproved()).build();
     }
+
 
 }

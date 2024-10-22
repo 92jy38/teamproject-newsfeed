@@ -1,3 +1,4 @@
+
 package com.sparta.newsfeed_project.domain.buddies.entity;
 
 import com.sparta.newsfeed_project.domain.buddies.dto.RequestBuddiesDto;
@@ -61,4 +62,5 @@ public class Buddies {
     public void Approved(boolean approved) {
         this.approved = approved;
     }
+
 }

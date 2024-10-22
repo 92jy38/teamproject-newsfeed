@@ -1,3 +1,4 @@
+
 package com.sparta.newsfeed_project.domain.member.repository;
 
 import com.sparta.newsfeed_project.domain.member.entity.Member;
@@ -14,4 +15,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findById(Long id);
 
     Member findByEmail(String email);
+
 }
