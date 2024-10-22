@@ -5,6 +5,8 @@ import com.sparta.newsfeed_project.domain.buddies.dto.ResponseBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,24 +18,35 @@ public class BuddiesConrtroller {
 
     private final BuddiesService buddiesService;
 
+
     @PostMapping("/{memberId}")
-    public ResponseBuddiesDto createBuddies(@RequestBody RequestBuddiesDto requestBuddiesDto) {
-        return buddiesService.createBuddies(requestBuddiesDto);
+    public ResponseEntity<ResponseBuddiesDto> createBuddies(@RequestBody RequestBuddiesDto requestBuddiesDto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(buddiesService.createBuddies(requestBuddiesDto));
     }
 
     @GetMapping("/{memberId}")
-    public List<ResponseBuddiesDto> getAllBuddyies(@PathVariable Long memberId) {
-        return buddiesService.getBuddies(memberId);
+    public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddyies(@PathVariable Long memberId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(buddiesService.getBuddies(memberId));
     }
 
     @PutMapping("/{memberId}")
-    public void acceptBuddies(@RequestBody RequestBuddiesDto requestBuddiesDto) {
+    public  ResponseEntity<Void> acceptBuddies(@RequestBody RequestBuddiesDto requestBuddiesDto) {
         buddiesService.acceptBuddies(requestBuddiesDto);
+        return  ResponseEntity
+                .status(HttpStatus.OK)
+                .body(null);
     }
 
     @DeleteMapping("/{memberId}")
-    public void deleteBuddies(@RequestBody RequestBuddiesDto requestBuddiesDto) {
+    public ResponseEntity<Void> deleteBuddies(@RequestBody RequestBuddiesDto requestBuddiesDto) {
         buddiesService.deleteBuddies(requestBuddiesDto);
+        return  ResponseEntity
+                .status(HttpStatus.OK)
+                .body(null);
     }
 
 }
