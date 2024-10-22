@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 회원 정보를 담는 Entity 클래스
  *
@@ -41,7 +44,14 @@ public class Member extends Timestamped {
     private String introduce;
 
     @ColumnDefault("false")
-    private boolean isDeleted;
+    private boolean deleted;
+
+    // === temp code
+    @OneToMany(mappedBy = "member",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<TempPost> posts = new ArrayList<>();
+    // ===
 
     public void update(RequestModifyMemberDto dto) {
         this.email = dto.getEmail();
@@ -51,7 +61,7 @@ public class Member extends Timestamped {
         this.introduce = dto.getIntroduce();
     }
 
-    public void delete(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public void delete() {
+        this.deleted = true;
     }
 }

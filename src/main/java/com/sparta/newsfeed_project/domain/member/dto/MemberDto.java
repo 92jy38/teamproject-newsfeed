@@ -1,10 +1,6 @@
 package com.sparta.newsfeed_project.domain.member.dto;
 
-import com.sparta.newsfeed_project.domain.member.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +12,7 @@ import java.time.LocalDateTime;
  */
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,30 +27,4 @@ public class MemberDto {
     private int postCount;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
-
-    /**
-     * User 엔티티 객체를 UserDto 객체로 변환합니다.
-     *
-     * @param member     변환할 User 엔티티 객체
-     * @param hiddenInfo 숨길 정보 여부
-     * @return 변환된 MemberDto 객체
-     * @since 2024-10-21
-     */
-    public static MemberDto from(Member member, boolean hiddenInfo) {
-        if (hiddenInfo) {
-            return MemberDto.builder()
-                    .id(member.getId())
-                    .email(member.getEmail())
-                    .nickname(member.getNickname()).build();
-        } else {
-            return MemberDto.builder()
-                    .id(member.getId())
-                    .email(member.getEmail())
-                    .password(member.getPassword())
-                    .nickname(member.getNickname())
-                    .username(member.getUsername())
-                    .createAt(member.getCreateAt())
-                    .updateAt(member.getUpdateAt()).build();
-        }
-    }
 }

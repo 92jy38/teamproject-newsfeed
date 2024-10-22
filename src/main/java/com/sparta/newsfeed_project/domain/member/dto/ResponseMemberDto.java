@@ -25,16 +25,15 @@ public class ResponseMemberDto {
     /**
      * 사용자 정보와 응답 코드를 포함하는 응답 DTO를 생성합니다.
      *
-     * @param member       사용자 정보 (UserDto)
-     * @param hiddenInfo   숨길 정보 여부
+     * @param memberDto       사용자 정보 (MemberDto)
      * @param responseCode 응답 코드
      * @return 생성된 응답 DTO 객체 (UserResponseDto)
      * @since 2024-10-21
      */
-    public static ResponseMemberDto create(Member member, boolean hiddenInfo, ResponseCode responseCode) {
+    public static ResponseMemberDto create(MemberDto memberDto, ResponseCode responseCode) {
         return ResponseMemberDto.builder()
                 .status(new ResponseStatusDto(responseCode))
-                .member(MemberDto.from(member, hiddenInfo))
+                .member(memberDto)
                 .build();
     }
 
