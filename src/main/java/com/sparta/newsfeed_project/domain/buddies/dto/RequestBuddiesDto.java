@@ -8,6 +8,4 @@ import lombok.Setter;
 public class RequestBuddiesDto {
     private Long fromUesrId;
     private Long toUserId;
-    private boolean approved;
-
 }

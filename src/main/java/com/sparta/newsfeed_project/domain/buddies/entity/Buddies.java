@@ -35,7 +35,6 @@ public class Buddies {
     private void init(RequestBuddiesDto request) {
         this.fromUesrId = request.getFromUesrId();
         this.toUserId = request.getToUserId();
-        this.approved = request.isApproved();
     }
 
     public static Buddies upend(RequestBuddiesDto request) {
@@ -59,7 +58,7 @@ public class Buddies {
         );
     }
 
-    public void Appoved(boolean b) {
-        this.approved = b;
+    public void Appoved(boolean approved) {
+        this.approved = approved;
     }
 }

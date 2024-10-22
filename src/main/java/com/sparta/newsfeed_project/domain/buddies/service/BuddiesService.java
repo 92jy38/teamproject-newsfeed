@@ -17,6 +17,7 @@ public class BuddiesService {
 
     public ResponseBuddiesDto createBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = Buddies.from(requestBuddiesDto);
+        buddies.Appoved(true);
         buddiesRepository.save(buddies);
         Buddies acceptBuddies = Buddies.upend(requestBuddiesDto);
         buddiesRepository.save(acceptBuddies);
