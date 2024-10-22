@@ -1,5 +1,6 @@
 package com.sparta.newsfeed_project.domain.buddies.service;
 
+
 import com.sparta.newsfeed_project.domain.buddies.dto.RequestBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.dto.ResponseBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
@@ -71,4 +72,5 @@ public class BuddiesService {
         buddiesRepository.delete(fromUser);
         buddiesRepository.delete(toUser);
     }
+
 }

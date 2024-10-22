@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +23,14 @@ import java.util.List;
 @Entity
 @Table(name = "member")
 public class Member extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 50)
     private String email;
+
 
     @Column(nullable = false)
     private String password;
@@ -62,4 +65,5 @@ public class Member extends Timestamped {
     public void delete() {
         this.deleted = true;
     }
+
 }

@@ -1,3 +1,4 @@
+
 package com.sparta.newsfeed_project.domain.common.config;
 
 import org.springframework.context.annotation.Bean;
@@ -22,3 +23,4 @@ public class PasswordConfig {
         return new PasswordEncoder();
     }
 }
+

@@ -1,5 +1,6 @@
 package com.sparta.newsfeed_project.domain.buddies.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,4 +13,5 @@ public class ResponseBuddiesDto {
     private Long fromUserId;
     private Long toUserId;
     private boolean approved;
+
 }
