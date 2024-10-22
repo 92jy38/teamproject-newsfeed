@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ResponseBuddiesDto {
     private Long id;
-    private Long fromUesrId;
+    private Long fromUserId;
     private Long toUserId;
     private boolean approved;
 }

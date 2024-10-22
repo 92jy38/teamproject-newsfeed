@@ -16,6 +16,7 @@ public class BuddiesService {
     private final BuddiesRepository buddiesRepository;
 
     public ResponseBuddiesDto createBuddies(RequestBuddiesDto requestBuddiesDto) {
+        buddiesRepository.findAllByFromUserIdOrToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
         Buddies buddies = Buddies.from(requestBuddiesDto);
         buddies.Appoved(true);
         buddiesRepository.save(buddies);
@@ -24,30 +25,34 @@ public class BuddiesService {
         return buddies.to();
     }
 
-    public List<ResponseBuddiesDto> getBuddies(Long memberId) {
-        List<Buddies> buddies = buddiesRepository.findAllByFromUesrIdOrToUserId(memberId,memberId);
+    public List<ResponseBuddiesDto> getBuddies() {
+        List<Buddies> buddies = buddiesRepository.findAll();
         return buddies.stream().map(Buddies::to).toList();
     }
-    ;
 
     public void acceptBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = buddiesRepository
-                .findOneByFromUesrIdAndToUserId(requestBuddiesDto.getFromUesrId(), requestBuddiesDto.getToUserId());
+                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
         buddies.Appoved(true);
         buddiesRepository.save(buddies);
     }
 
     public void deleteBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = buddiesRepository
-                .findOneByFromUesrIdAndToUserId(requestBuddiesDto.getFromUesrId(), requestBuddiesDto.getToUserId());
+                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
         buddies.Appoved(false);
         Buddies buddy = buddiesRepository
-                .findOneByFromUesrIdAndToUserId(requestBuddiesDto.getToUserId(), requestBuddiesDto.getFromUesrId());
-        if(buddies.isApproved() == buddy.isApproved()){
+                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getToUserId(), requestBuddiesDto.getFromUserId());
+        if (buddies.isApproved() == buddy.isApproved()) {
             buddiesRepository.delete(buddy);
             buddiesRepository.delete(buddies);
-        }else{
+        } else {
             buddiesRepository.save(buddies);
         }
+    }
+
+    public List<ResponseBuddiesDto> getAllBuddies(Long memberId) {
+        List<Buddies> buddies = buddiesRepository.findAllByToUserId(memberId);
+        return buddies.stream().map(Buddies::to).toList();
     }
 }

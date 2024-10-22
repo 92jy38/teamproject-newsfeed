@@ -18,7 +18,7 @@ public class Buddies {
     private Long id;
 
     @Column
-    private Long fromUesrId;
+    private Long fromUserId;
 
     @Column
     private Long toUserId;
@@ -33,7 +33,7 @@ public class Buddies {
     }
 
     private void init(RequestBuddiesDto request) {
-        this.fromUesrId = request.getFromUesrId();
+        this.fromUserId = request.getFromUserId();
         this.toUserId = request.getToUserId();
     }
 
@@ -44,15 +44,15 @@ public class Buddies {
     }
 
     private void initUpend(RequestBuddiesDto request) {
-        this.fromUesrId = request.getToUserId();
-        this.toUserId = request.getFromUesrId();
+        this.fromUserId = request.getToUserId();
+        this.toUserId = request.getFromUserId();
         this.approved = false;
     }
 
     public ResponseBuddiesDto to() {
         return new ResponseBuddiesDto(
                 id,
-                fromUesrId,
+                fromUserId,
                 toUserId,
                 approved
         );

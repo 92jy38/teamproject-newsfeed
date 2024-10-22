@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestBuddiesDto {
-    private Long fromUesrId;
+    private Long fromUserId;
     private Long toUserId;
 }

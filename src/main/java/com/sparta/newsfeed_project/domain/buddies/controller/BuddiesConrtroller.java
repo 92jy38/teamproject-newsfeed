@@ -29,7 +29,7 @@ public class BuddiesConrtroller {
     public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddyies(@PathVariable Long memberId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(buddiesService.getBuddies(memberId));
+                .body(buddiesService.getAllBuddies(memberId));
     }
 
     @PutMapping("/{memberId}")
@@ -46,6 +46,12 @@ public class BuddiesConrtroller {
         return  ResponseEntity
                 .status(HttpStatus.OK)
                 .body(null);
+    }
+    @GetMapping("/List")
+    public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddies() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(buddiesService.getBuddies());
     }
 
 }
