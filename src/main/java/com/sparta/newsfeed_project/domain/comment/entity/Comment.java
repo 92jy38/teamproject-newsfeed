@@ -1,5 +1,6 @@
 package com.sparta.newsfeed_project.domain.comment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.newsfeed_project.domain.common.entity.Timestamped;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.post.entity.Post;
@@ -26,11 +27,13 @@ public class Comment extends Timestamped {
     // 멤버와의 관계 설정 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonIgnore // 양방향으로 인한 무한루프 발생 차단 (순환 참조 방지)
     private Member member;
 
     // 게시글과의 관계 설정 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
+    @JsonIgnore
     private Post post;
 
     // setter 대신 생성자 사용
