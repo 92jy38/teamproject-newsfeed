@@ -23,7 +23,7 @@ public class BuddiesService {
             throw new IllegalArgumentException("존재하는 친구 목록입니다.");
         }
         Buddies buddies = Buddies.from(requestBuddiesDto);
-        buddies.Appoved(true);
+        buddies.Approved(true);
         buddiesRepository.save(buddies);
         Buddies acceptBuddies = Buddies.upend(requestBuddiesDto);
         buddiesRepository.save(acceptBuddies);
@@ -38,14 +38,14 @@ public class BuddiesService {
     public void acceptBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = buddiesRepository
                 .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
-        buddies.Appoved(true);
+        buddies.Approved(true);
         buddiesRepository.save(buddies);
     }
 
     public void deleteBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = buddiesRepository
                 .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
-        buddies.Appoved(false);
+        buddies.Approved(false);
         Buddies buddy = buddiesRepository
                 .findOneByFromUserIdAndToUserId(requestBuddiesDto.getToUserId(), requestBuddiesDto.getFromUserId());
         if (buddies.isApproved() == buddy.isApproved()) {
@@ -60,4 +60,7 @@ public class BuddiesService {
         List<Buddies> buddies = buddiesRepository.findAllByToUserId(memberId);
         return buddies.stream().map(Buddies::to).toList();
     }
+
+
+
 }
