@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseMemberDto {
-    private MemberDto user;
+    private MemberDto member;
     private ResponseStatusDto status;
 
     /**
@@ -34,7 +34,7 @@ public class ResponseMemberDto {
     public static ResponseMemberDto create(Member member, boolean hiddenInfo, ResponseCode responseCode) {
         return ResponseMemberDto.builder()
                 .status(new ResponseStatusDto(responseCode))
-                .user(MemberDto.from(member, hiddenInfo))
+                .member(MemberDto.from(member, hiddenInfo))
                 .build();
     }
 

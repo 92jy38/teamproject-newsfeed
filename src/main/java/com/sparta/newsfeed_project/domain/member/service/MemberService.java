@@ -49,7 +49,7 @@ public class MemberService {
      */
     public void validateCreateInfo(Member user) throws ResponseException {
         Member findMember = memberRepository.findByEmail(user.getEmail());
-        if (findMember != null) // 중복 이메일 확인
+        if (findMember != null)
             throw new ResponseException(ResponseCode.USER_EMAIL_DUPLICATED);
     }
 
@@ -163,7 +163,7 @@ public class MemberService {
     public ResponseStatusDto deleteMember(HttpServletRequest req, RequestRemoveMemberDto requestDto) throws ResponseException {
         // TODO. khj jwt완성시 아래 주석으로 대체.
         // Member loginMember = (Member) req.getAttribute("member");
-        Member loginMember = Member.builder().id(1L).build();
+        Member loginMember = Member.builder().id(1L).password("Admin123!").build();
         // TODO. khj 암호화.. 어쩌구..
         if (!loginMember.getPassword().equals(requestDto.getPassword()))
             throw new ResponseException(ResponseCode.USER_PASSWORD_NOT_MATCH);
@@ -173,7 +173,6 @@ public class MemberService {
             throw new ResponseException(ResponseCode.USER_DELETED);
 
         deleteMember.delete(true);
-        memberRepository.delete(deleteMember);
         return new ResponseStatusDto(ResponseCode.SUCCESS_DELETE_USER);
     }
 
