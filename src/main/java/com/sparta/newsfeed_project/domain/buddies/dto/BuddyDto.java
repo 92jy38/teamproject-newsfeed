@@ -1,10 +1,9 @@
+
 package com.sparta.newsfeed_project.domain.buddies.dto;
 
 import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jdk.jshell.Snippet;
+import lombok.*;
 
 @Getter
 @Builder
@@ -23,5 +22,6 @@ public class BuddyDto {
                 .toUserId(buddies.getToUserId())
                 .approved(buddies.isApproved()).build();
     }
+
 
 }

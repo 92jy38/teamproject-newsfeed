@@ -1,12 +1,15 @@
 package com.sparta.newsfeed_project.domain.buddies.service;
 
+
 import com.sparta.newsfeed_project.domain.buddies.dto.RequestBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.dto.ResponseBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,7 +26,7 @@ public class BuddiesService {
             throw new IllegalArgumentException("존재하는 친구 목록입니다.");
         }
         Buddies buddies = Buddies.from(requestBuddiesDto);
-//        buddies.Approved(true);
+        buddies.Approved(true);
         buddiesRepository.save(buddies);
         Buddies acceptBuddies = Buddies.upend(requestBuddiesDto);
         buddiesRepository.save(acceptBuddies);
@@ -37,15 +40,16 @@ public class BuddiesService {
 
     public void acceptBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = buddiesRepository
-                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
-//        buddies.Approved(true);
+                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(),
+                        requestBuddiesDto.getToUserId());
+        buddies.Approved(true);
         buddiesRepository.save(buddies);
     }
 
     public void deleteBuddies(RequestBuddiesDto requestBuddiesDto) {
         Buddies buddies = buddiesRepository
                 .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
-//        buddies.Approved(false);
+        buddies.Approved(false);
         Buddies buddy = buddiesRepository
                 .findOneByFromUserIdAndToUserId(requestBuddiesDto.getToUserId(), requestBuddiesDto.getFromUserId());
         if (buddies.isApproved() == buddy.isApproved()) {
@@ -62,5 +66,11 @@ public class BuddiesService {
     }
 
 
+    public void deletedBuddies(Long memberId) {
+        Buddies fromUser= buddiesRepository.findByFromUserID(memberId);
+        Buddies toUser = buddiesRepository.findByFromUserID(fromUser.getToUserId());
+        buddiesRepository.delete(fromUser);
+        buddiesRepository.delete(toUser);
+    }
 
 }
