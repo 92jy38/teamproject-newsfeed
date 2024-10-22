@@ -1,5 +1,3 @@
-package com.sparta.newsfeed_project.domain.member.entity;
-
 import com.sparta.newsfeed_project.domain.common.entity.Timestamped;
 import com.sparta.newsfeed_project.domain.member.dto.RequestModifyMemberDto;
 import jakarta.persistence.*;
