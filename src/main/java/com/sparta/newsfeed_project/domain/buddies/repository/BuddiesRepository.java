@@ -13,4 +13,6 @@ public interface BuddiesRepository extends JpaRepository <Buddies,Long> {
     Buddies findOneByFromUserIdAndToUserId(Long memberId, Long buddyId);
 
     List<Buddies> findAllByToUserId(Long memberId);
+
+    boolean existsByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
 }

@@ -16,7 +16,12 @@ public class BuddiesService {
     private final BuddiesRepository buddiesRepository;
 
     public ResponseBuddiesDto createBuddies(RequestBuddiesDto requestBuddiesDto) {
-        buddiesRepository.findAllByFromUserIdOrToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
+        if(requestBuddiesDto.getFromUserId().equals(requestBuddiesDto.getToUserId())){
+            throw new IllegalArgumentException("중복된 아이디입니다.");
+        }
+        if(buddiesRepository.existsByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId())){
+            throw new IllegalArgumentException("존재하는 친구 목록입니다.");
+        }
         Buddies buddies = Buddies.from(requestBuddiesDto);
         buddies.Appoved(true);
         buddiesRepository.save(buddies);
