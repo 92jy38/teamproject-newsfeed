@@ -88,7 +88,7 @@ public class MemberService {
         int postCount = postService.getPostCount(member.getId());
 
         MemberDto memberDto = new MemberDto();
-        memberDto.setId(id);
+        memberDto.setId(member.getId());
         memberDto.setEmail(member.getEmail());
         memberDto.setNickname(member.getNickname());
         memberDto.setFromBuddyCount(fromBuddyCount);

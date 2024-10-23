@@ -9,20 +9,16 @@ import lombok.Getter;
  */
 @Getter
 public class ResponseException extends RuntimeException {
-    private final String result;
     private final ResponseCode responseCode;
     private final String message;
 
     public ResponseException(ResponseCode responseCode) {
-        this.result = "ERROR";
         this.responseCode = responseCode;
         this.message = responseCode.getMessage();
     }
 
     public ResponseException(ResponseCode responseCode, String message) {
-        this.result = "ERROR";
         this.responseCode = responseCode;
         this.message = message;
     }
-
 }
