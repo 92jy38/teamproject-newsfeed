@@ -30,6 +30,9 @@
 <br>
 <hr/>
 
+## 와이어 프레임
+![image](https://github.com/user-attachments/assets/e71627f4-af82-40ac-ac00-6d3e5caedc77)
+
 
 ## API 명세
 <table>
