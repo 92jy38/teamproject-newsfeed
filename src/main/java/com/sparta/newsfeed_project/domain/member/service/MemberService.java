@@ -10,7 +10,6 @@ import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,48 +56,6 @@ public class MemberService {
         Member findMember = memberRepository.findByEmail(email);
         if (findMember != null)
             throw new ResponseException(ResponseCode.MEMBER_EMAIL_DUPLICATED);
-    }
-
-    /**
-     * 로그인 합니다.
-     *
-     * @param requestDto 로그인 요청 정보
-     * @return 로그인 결과 (ResponseStatusDto)
-     * @since 2024-10-21
-     */
-    public ResponseStatusDto login(HttpServletResponse res, RequestSearchMemberDto requestDto) throws ResponseException {
-        validateLoginInfo(requestDto.getEmail(), requestDto.getPassword());
-        // TODO. 쿠키 생성 필요
-        return new ResponseStatusDto(ResponseCode.SUCCESS_LOGIN);
-    }
-
-    /**
-     * 로그아웃 합니다.
-     *
-     * @return 로그아웃 결과 (ResponseStatusDto)
-     * @since 2024-10-21
-     */
-    public ResponseStatusDto logout(HttpServletResponse res) throws ResponseException {
-        // TODO. 쿠키 해제
-        return new ResponseStatusDto(ResponseCode.SUCCESS_LOGOUT);
-    }
-
-    /**
-     * 로그인 시 유저 정보를 검사합니다.
-     *
-     * @param email    입력한 email
-     * @param password 입력한 비밀번호
-     * @throws ResponseException 유저 정보가 올바르지 않은 경우 예외를 발생시킵니다.
-     * @since 2024-10-21
-     */
-    public void validateLoginInfo(String email, String password) throws ResponseException {
-        Member findMember = memberRepository.findByEmail(email);
-        if (findMember == null)
-            throw new ResponseException(ResponseCode.MEMBER_NOT_FOUND);
-        else if (!passwordEncoder.matches(password, findMember.getPassword()))
-            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
-        else if(findMember.isDeleted())
-            throw new ResponseException(ResponseCode.MEMBER_DELETE);
     }
 
     /**
@@ -178,7 +135,7 @@ public class MemberService {
      * @since 2024-10-21
      */
     private void validateUpdatePassword(RequestModifyMemberDto requestDto, Member loginMember) throws ResponseException {
-         if (!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
+        if (!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
         else if (passwordEncoder.matches(requestDto.getNewPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_DUPLICATED);
@@ -197,7 +154,7 @@ public class MemberService {
         // TODO. khj jwt완성시 아래 주석으로 대체.
         // Member loginMember = (Member) req.getAttribute("member");
         Member loginMember = Member.builder().id(1L).password("$2a$10$zbcSdhAUvUfopwfOF0nE5epVpvCfgjoP9Dh61yqvk2KQJSuZ1xAIe").build();
-        if(!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
+        if (!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
 
         Member deleteMember = findById(loginMember.getId());
