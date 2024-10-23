@@ -45,7 +45,7 @@ public class CommentService {
 
     // 게시글에 대한 모든 댓글 조회
     @Transactional(readOnly = true)
-    public Page<ResponseCommentDto> getCommentsByPostId(Long postId, int page, int size) throws ResponseException {
+    public Page<ResponseCommentDto> getCommentsByPostId(Long postId, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createAt"));
         Page<Comment> commentPage = commentRepository.findByPostId(postId, pageable);
         return commentPage.map(ResponseCommentDto::new);
