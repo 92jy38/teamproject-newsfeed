@@ -5,7 +5,7 @@
 #### 프로젝트 진행 기간: 24.10.18 ~ 24.10.24
 
 ## 프로젝트 목표
-#### C R U D 를 중심으로, Spring 으로 SNS의 다양한 기술들을 개발❗ 협업 커뮤니케이션 능력을 곁들인➕ <br>
+#### C R U D 를 중심으로, Spring을 활용하여 SNS의 다양한 기술들을 개발❗ 협업 커뮤니케이션 능력을 곁들인➕ <br>
 
 
 ## 👨‍👨‍👧‍👧 팀 구성
@@ -21,7 +21,7 @@
 ## Tools
 ### 🖥 language & Server 🖥
 
-<img src="https://img.shields.io/badge/intellij idea-207BEA?style=for-the-badge&logo=intellij%20idea&logoColor=white"> JDK 17 <br>
+<img src="https://img.shields.io/badge/intellij idea-207BEA?style=for-the-badge&logo=intellij%20idea&logoColor=white"> <br>
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <br>
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white"> <hr>
 ### 👏 Cowork Tools 👏
@@ -368,6 +368,7 @@
 ```
 
 ## 개체 관계도 (ERD)
+![image](https://github.com/user-attachments/assets/e24d514a-8adb-4747-a7bc-0a5b60e47741)
 
 ## Application 기능 Preview
 
