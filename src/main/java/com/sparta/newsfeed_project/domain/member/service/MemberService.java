@@ -1,6 +1,7 @@
 package com.sparta.newsfeed_project.domain.member.service;
 
-import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
+import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
+import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
@@ -8,12 +9,14 @@ import com.sparta.newsfeed_project.domain.common.util.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.dto.*;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
-import com.sparta.newsfeed_project.domain.post.service.PostService;
+import com.sparta.newsfeed_project.domain.post.entity.Post;
+import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,8 +31,8 @@ public class MemberService {
     private final String SUBJECT_ATTRIBUTE_KEY = "loggedInWithId";
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final PostService postService;
-    private final BuddiesService buddiesService;
+    private final BuddiesRepository buddiesRepository;
+    private final PostRepository postRepository;
 
     /**
      * 회원가입을 처리합니다.
@@ -83,9 +86,9 @@ public class MemberService {
      */
     private MemberDto createMemberDto(Long id, Member member) {
         boolean hiddenInfo = !Objects.equals(member.getId(), id);
-        int fromBuddyCount = buddiesService.getFromBuddyCount(member.getId());
-        int toBuddyCount = buddiesService.getToBuddyCount(member.getId());
-        int postCount = postService.getPostCount(member.getId());
+        int fromBuddyCount = getFromBuddyCount(member.getId());
+        int toBuddyCount = getToBuddyCount(member.getId());
+        int postCount = getPostCount(member.getId());
 
         MemberDto memberDto = new MemberDto();
         memberDto.setId(member.getId());
@@ -158,8 +161,8 @@ public class MemberService {
             throw new ResponseException(ResponseCode.MEMBER_DELETE);
 
         deleteMember.delete();
-        buddiesService.deleteMemberBuddies(loginMember.getId());
-        postService.deleteMemberPosts(loginMember.getId());
+        deleteMemberBuddies(loginMember.getId());
+        deleteMemberPosts(loginMember.getId());
 
         return new ResponseStatusDto(ResponseCode.SUCCESS_DELETE_USER);
     }
@@ -179,5 +182,61 @@ public class MemberService {
         else if (member.isDeleted())
             throw new ResponseException(ResponseCode.MEMBER_DELETE);
         return member;
+    }
+
+    /**
+     * 회원의 친구 관계를 모두 삭제합니다.
+     *
+     * @param memberId 회원 ID
+     * @since 2024-10-23
+     */
+    public void deleteMemberBuddies(Long memberId) {
+        List<Buddies> buddies = buddiesRepository.findByFromUserIdOrToUserId(memberId, memberId);
+        if (buddies != null && !buddies.isEmpty())
+            buddiesRepository.deleteAll(buddies);
+
+    }
+
+    /**
+     * 회원이 친구 추가한 친구 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 친구 수
+     */
+    public int getFromBuddyCount(Long memberId) {
+        return buddiesRepository.countByFromUserId(memberId).intValue();
+    }
+
+    /**
+     * 회원을 친구 추가한 친구 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 친구 수
+     */
+    public int getToBuddyCount(Long memberId) {
+        return buddiesRepository.countByToUserId(memberId).intValue();
+    }
+
+    /**
+     * 회원이 작성한 게시글을 모두 삭제합니다.
+     *
+     * @param memberId 회원 ID
+     * @since 2024-10-23
+     */
+    public void deleteMemberPosts(Long memberId) {
+        List<Post> posts = postRepository.findAllByMemberId(memberId);
+        if (posts != null && !posts.isEmpty())
+            postRepository.deleteAll(posts);
+    }
+
+    /**
+     * 회원의 게시물 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 게시물 수
+     * @since 2024-10-23
+     */
+    public int getPostCount(Long memberId) {
+        return postRepository.countByMemberId(memberId).intValue();
     }
 }
