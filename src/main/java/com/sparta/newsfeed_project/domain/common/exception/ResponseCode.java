@@ -38,7 +38,8 @@ public enum ResponseCode {
     MEMBER_EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이메일이 중복됩니다"),
 
     // 게시글 관련 에러 코드
-    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 삭제된 게시글 입니다."),
+    POST_INVALID(HttpStatus.BAD_REQUEST, "본인의 게시물이 아닙니다."),
 
     // 댓글 관련 에러 코드
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),

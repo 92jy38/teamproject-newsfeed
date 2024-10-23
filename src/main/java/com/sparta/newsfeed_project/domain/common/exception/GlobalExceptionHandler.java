@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -35,6 +36,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseStatusDto(ResponseCode.BAD_INPUT, errorMsg));
+    }
+
+    /**
+     * 이미지 업로드/다운로드 시 발생할 수 있는 예외 처리
+     *
+     * @since 2024-10-23
+     */
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ResponseStatusDto> BaseException(IOException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseStatusDto(ResponseCode.BAD_INPUT, ex.getMessage()));
     }
 
     /**

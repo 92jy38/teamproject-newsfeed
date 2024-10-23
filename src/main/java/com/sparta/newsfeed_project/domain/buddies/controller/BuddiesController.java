@@ -95,8 +95,6 @@ public class BuddiesController {
 
     @GetMapping("/List")
     public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddies() {
-
-
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -109,4 +107,3 @@ public class BuddiesController {
     }
 
 }
-
