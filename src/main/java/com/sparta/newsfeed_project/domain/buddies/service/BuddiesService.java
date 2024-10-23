@@ -16,17 +16,18 @@ public class BuddiesService {
 
     private final BuddiesRepository buddiesRepository;
 
-    public ResponseBuddiesDto createBuddies(RequestBuddiesDto requestBuddiesDto) {
-        if (requestBuddiesDto.getFromUserId().equals(requestBuddiesDto.getToUserId())) {
+
+    public ResponseBuddiesDto createBuddies(Long memberId, Long userId) {
+        if (memberId.equals(userId)) {
             throw new IllegalArgumentException("중복된 아이디입니다.");
         }
-        if (buddiesRepository.existsByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId())) {
+        if (buddiesRepository.existsByFromUserIdAndToUserId(memberId, userId)) {
             throw new IllegalArgumentException("존재하는 친구 목록입니다.");
         }
-        Buddies buddies = Buddies.from(requestBuddiesDto);
+        Buddies buddies = Buddies.from(memberId, userId);
         buddies.Approved(true);
         buddiesRepository.save(buddies);
-        Buddies acceptBuddies = Buddies.upend(requestBuddiesDto);
+        Buddies acceptBuddies = Buddies.upend(memberId, userId);
         buddiesRepository.save(acceptBuddies);
         return buddies.to();
     }
@@ -36,20 +37,19 @@ public class BuddiesService {
         return buddies.stream().map(Buddies::to).toList();
     }
 
-    public void acceptBuddies(RequestBuddiesDto requestBuddiesDto) {
+    public void acceptBuddies(Long memberId, Long userId) {
         Buddies buddies = buddiesRepository
-                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(),
-                        requestBuddiesDto.getToUserId());
+                .findOneByFromUserIdAndToUserId(memberId, userId);
         buddies.Approved(true);
         buddiesRepository.save(buddies);
     }
 
-    public void deleteBuddies(RequestBuddiesDto requestBuddiesDto) {
+    public void deleteBuddies(Long memberId, Long userId) {
         Buddies buddies = buddiesRepository
-                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId());
+                .findOneByFromUserIdAndToUserId(memberId, userId);
         buddies.Approved(false);
         Buddies buddy = buddiesRepository
-                .findOneByFromUserIdAndToUserId(requestBuddiesDto.getToUserId(), requestBuddiesDto.getFromUserId());
+                .findOneByFromUserIdAndToUserId(userId, memberId);
         if (buddies.isApproved() == buddy.isApproved()) {
             buddiesRepository.delete(buddy);
             buddiesRepository.delete(buddies);
@@ -62,6 +62,7 @@ public class BuddiesService {
         List<Buddies> buddies = buddiesRepository.findAllByToUserId(memberId);
         return buddies.stream().map(Buddies::to).toList();
     }
+
 
 
 
@@ -98,3 +99,4 @@ public class BuddiesService {
         return buddiesRepository.countByToUserId(memberId).intValue();
     }
 }
+

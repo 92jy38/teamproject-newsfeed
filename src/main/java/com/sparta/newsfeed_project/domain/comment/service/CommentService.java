@@ -4,11 +4,13 @@ import com.sparta.newsfeed_project.domain.comment.dto.RequestCommentDto;
 import com.sparta.newsfeed_project.domain.comment.dto.ResponseCommentDto;
 import com.sparta.newsfeed_project.domain.comment.entity.Comment;
 import com.sparta.newsfeed_project.domain.comment.repository.CommentRepository;
+
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.entity.Post;
+import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
