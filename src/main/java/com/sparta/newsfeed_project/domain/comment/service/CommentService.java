@@ -9,11 +9,13 @@ import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.entity.Post;
 import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
     // 댓글 생성
-    // 예외처리 수정 요망
+    // 예외처리 수정 해야함
     @Transactional
     public ResponseCommentDto createComment(Long postId, RequestCommentDto requestDto) {
         Member member = memberRepository.findById(requestDto.getMemberId())
@@ -38,13 +40,12 @@ public class CommentService {
         return new ResponseCommentDto(comment);
     }
 
-    // 게시글에 대한 모든 댓글 조회
+    // 게시글에 대한 모든 댓글 조회 -> 페이지로 조회 수정, createAt 기준으로 내림차순 정렬
     @Transactional(readOnly = true)
-    public List<ResponseCommentDto> getCommentsByPostId(Long postId) {
-        List<Comment> comments = commentRepository.findByPostId(postId);
-        return comments.stream()
-                .map(ResponseCommentDto::new)
-                .collect(Collectors.toList());
+    public Page<ResponseCommentDto> getCommentsByPostId(Long postId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createAt"));
+        Page<Comment> commentPage = commentRepository.findByPostId(postId, pageable);
+        return commentPage.map(ResponseCommentDto::new);
     }
 
     // 댓글 수정
