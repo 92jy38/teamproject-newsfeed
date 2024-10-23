@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
 
@@ -20,7 +19,12 @@ public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
     @Query("select b.toUserId from Buddies b where b.fromUserId = :memberId and b.approved = true ")
     List<Long> findIdListByFromUserId(@Param("memberId") Long memberId);
 
-    Buddies findByFromUserID(Long fromUserId);
+    Buddies findByFromUserId(Long fromUserId);
 
+    List<Buddies> findByFromUserIdOrToUserId(Long fromUserId, Long toUserId);
+
+    Long countByFromUserId(Long fromUserId);
+
+    Long countByToUserId(Long fromUserId);
 }
 

@@ -7,9 +7,7 @@ import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,10 +17,10 @@ public class BuddiesService {
     private final BuddiesRepository buddiesRepository;
 
     public ResponseBuddiesDto createBuddies(RequestBuddiesDto requestBuddiesDto) {
-        if(requestBuddiesDto.getFromUserId().equals(requestBuddiesDto.getToUserId())){
+        if (requestBuddiesDto.getFromUserId().equals(requestBuddiesDto.getToUserId())) {
             throw new IllegalArgumentException("중복된 아이디입니다.");
         }
-        if(buddiesRepository.existsByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId())){
+        if (buddiesRepository.existsByFromUserIdAndToUserId(requestBuddiesDto.getFromUserId(), requestBuddiesDto.getToUserId())) {
             throw new IllegalArgumentException("존재하는 친구 목록입니다.");
         }
         Buddies buddies = Buddies.from(requestBuddiesDto);
@@ -66,11 +64,37 @@ public class BuddiesService {
     }
 
 
-    public void deletedBuddies(Long memberId) {
-        Buddies fromUser= buddiesRepository.findByFromUserID(memberId);
-        Buddies toUser = buddiesRepository.findByFromUserID(fromUser.getToUserId());
-        buddiesRepository.delete(fromUser);
-        buddiesRepository.delete(toUser);
+
+    /**
+     * 회원의 친구 관계를 모두 삭제합니다.
+     *
+     * @param memberId 회원 ID
+     * @since 2024-10-23
+     */
+    public void deleteMemberBuddies(Long memberId) {
+        List<Buddies> buddies = buddiesRepository.findByFromUserIdOrToUserId(memberId, memberId);
+        if (buddies != null && !buddies.isEmpty())
+            buddiesRepository.deleteAll(buddies);
+
     }
 
+    /**
+     * 회원이 친구 추가한 친구 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 친구 수
+     */
+    public int getFromBuddyCount(Long memberId) {
+        return buddiesRepository.countByFromUserId(memberId).intValue();
+    }
+
+    /**
+     * 회원을 친구 추가한 친구 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 친구 수
+     */
+    public int getToBuddyCount(Long memberId) {
+        return buddiesRepository.countByToUserId(memberId).intValue();
+    }
 }

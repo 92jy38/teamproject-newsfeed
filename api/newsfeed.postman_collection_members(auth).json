@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "6ce7f397-5efa-493f-8447-7020a8db8366",
+		"name": "newsfeed",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38557384"
+	},
+	"item": [
+		{
+			"name": "members(auth)",
+			"item": [
+				{
+					"name": "로그인",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"test@mail\",\r\n    \"password\":\"1q2w3e4r\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/members/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"members",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "로그아웃",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:8080",
+			"type": "default"
+		}
+	]
+}

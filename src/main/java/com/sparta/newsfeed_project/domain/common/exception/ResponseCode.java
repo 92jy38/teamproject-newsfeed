@@ -32,23 +32,13 @@ public enum ResponseCode {
 
     // 사용자 관련 에러 코드
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
-    MEMBER_DELETE(HttpStatus.NOT_FOUND, "이미 탈퇴한 유저입니다."),
-    MEMBER_PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
+    MEMBER_DELETE(HttpStatus.FORBIDDEN, "이미 탈퇴한 유저입니다."),
+    MEMBER_PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
     MEMBER_PASSWORD_DUPLICATED(HttpStatus.CONFLICT, "비밀번호가 중복됩니다"),
     MEMBER_EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이메일이 중복됩니다"),
 
     // 게시글 관련 에러 코드
-    SUCCESS_CREATE_POST(HttpStatus.CREATED, "게시글 등록 성공"),
-    SUCCESS_SEARCH_POST(HttpStatus.OK, "게시글 조회 성공"),
-    SUCCESS_UPDATE_POST(HttpStatus.OK, "게시글 수정 성공"),
-    SUCCESS_DELETE_POST(HttpStatus.NO_CONTENT, "게시글 삭제 성공"),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
-
-    // 댓글 관련 성공 코드
-    SUCCESS_CREATE_COMMENT(HttpStatus.CREATED, "댓글 등록 성공"),
-    SUCCESS_SEARCH_COMMENT(HttpStatus.OK, "댓글 조회 성공"),
-    SUCCESS_UPDATE_COMMENT(HttpStatus.OK, "댓글 수정 성공"),
-    SUCCESS_DELETE_COMMENT(HttpStatus.NO_CONTENT, "댓글 삭제 성공"),
 
     // 댓글 관련 에러 코드
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
@@ -59,9 +49,11 @@ public enum ResponseCode {
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러가 발생 하였습니다."),
     UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류"),
 
+
     // 기타 에러 코드
     BAD_INPUT(HttpStatus.BAD_REQUEST, "잘못된 값 입력"),
-    FAIL_ENCODING(HttpStatus.BAD_REQUEST, "잘못된 인코딩을 사용하였습니다.");
+    FAIL_ENCODING(HttpStatus.BAD_REQUEST, "잘못된 인코딩을 사용하였습니다."),
+    UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류");
 
     private final HttpStatus httpStatus;
     private final String message;
