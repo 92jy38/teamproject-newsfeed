@@ -4,6 +4,8 @@ import com.sparta.newsfeed_project.domain.comment.dto.RequestCommentDto;
 import com.sparta.newsfeed_project.domain.comment.dto.ResponseCommentDto;
 import com.sparta.newsfeed_project.domain.comment.entity.Comment;
 import com.sparta.newsfeed_project.domain.comment.repository.CommentRepository;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.entity.Post;
@@ -28,12 +30,12 @@ public class CommentService {
     // 댓글 생성
     // 예외처리 수정 해야함
     @Transactional
-    public ResponseCommentDto createComment(Long postId, RequestCommentDto requestDto) {
+    public ResponseCommentDto createComment(Long postId, RequestCommentDto requestDto) throws ResponseException {
         Member member = memberRepository.findById(requestDto.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseException(ResponseCode.MEMBER_NOT_FOUND));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseException(ResponseCode.POST_NOT_FOUND));
 
         Comment comment = new Comment(requestDto.getContent(), member, post);
         commentRepository.save(comment);
@@ -50,13 +52,13 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public ResponseCommentDto updateComment(Long id, RequestCommentDto requestDto) {
+    public ResponseCommentDto updateComment(Long id, RequestCommentDto requestDto) throws ResponseException {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseException(ResponseCode.COMMENT_NOT_FOUND));
 
         // 작성자 본인인지 확인
         if (!comment.getMember().getId().equals(requestDto.getMemberId())) {
-            throw new IllegalArgumentException("댓글 수정 권한이 없습니다.");
+            throw new ResponseException(ResponseCode.COMMENT_INVALID_PERMISSION);
         }
         comment.updateContent(requestDto.getContent());
         return new ResponseCommentDto(comment);
@@ -64,13 +66,13 @@ public class CommentService {
 
     // 댓글 삭제
     @Transactional
-    public void deleteComment(Long id, Long memberId) {
+    public void deleteComment(Long id, Long memberId) throws ResponseException {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseException(ResponseCode.COMMENT_NOT_FOUND));
 
         // 작성자 본인인지 확인
         if (!comment.getMember().getId().equals(memberId)) {
-            throw new IllegalArgumentException("댓글 삭제 권한이 없습니다.");
+            throw new ResponseException(ResponseCode.COMMENT_INVALID_PERMISSION);
         }
         commentRepository.delete(comment);
     }
