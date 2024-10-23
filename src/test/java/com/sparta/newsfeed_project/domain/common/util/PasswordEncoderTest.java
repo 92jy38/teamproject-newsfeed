@@ -1,4 +1,4 @@
-package com.sparta.newsfeed_project.domain.common.jwt;
+package com.sparta.newsfeed_project.domain.common.util;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,6 @@
 package com.sparta.newsfeed_project.domain.common.filter;
 
-import com.sparta.newsfeed_project.domain.common.jwt.JwtUtil;
+import com.sparta.newsfeed_project.domain.common.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

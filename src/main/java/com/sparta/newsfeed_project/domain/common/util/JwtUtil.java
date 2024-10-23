@@ -1,4 +1,4 @@
-package com.sparta.newsfeed_project.domain.common.jwt;
+package com.sparta.newsfeed_project.domain.common.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
