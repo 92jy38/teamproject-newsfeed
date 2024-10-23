@@ -139,27 +139,4 @@ public class PostService {
         postRepository.deleteById(id);
 
     }
-
-    /**
-     * 회원의 게시물 수를 조회합니다.
-     *
-     * @param memberId 회원 ID
-     * @return 게시물 수
-     * @since 2024-10-23
-     */
-    public int getPostCount(Long memberId) {
-        return postRepository.countByMemberId(memberId).intValue();
-    }
-
-    /**
-     * 회원이 작성한 게시글을 모두 삭제합니다.
-     *
-     * @param memberId 회원 ID
-     * @since 2024-10-23
-     */
-    public void deleteMemberPosts(Long memberId) {
-        List<Post> posts = postRepository.findAllByMemberId(memberId);
-        if (posts != null && !posts.isEmpty())
-            postRepository.deleteAll(posts);
-    }
 }
