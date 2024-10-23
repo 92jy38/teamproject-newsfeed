@@ -5,11 +5,11 @@ import com.sparta.newsfeed_project.domain.comment.dto.ResponseCommentDto;
 import com.sparta.newsfeed_project.domain.comment.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -26,8 +26,11 @@ public class CommentController {
 
     // 게시글에 대한 모든 댓글을 조회하는 메서드
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<ResponseCommentDto>> getCommentsByPostId(@PathVariable("postId") Long postId) {
-        List<ResponseCommentDto> responseDtos = commentService.getCommentsByPostId(postId);
+    public ResponseEntity<Page<ResponseCommentDto>> getCommentsByPostId(
+            @PathVariable("postId") Long postId,
+            @RequestParam(defaultValue = "1") int page, // 페이지 번호 (1부터 시작)
+            @RequestParam(defaultValue = "10") int size) { // 페이지 사이즈
+        Page<ResponseCommentDto> responseDtos = commentService.getCommentsByPostId(postId, page, size);
         return ResponseEntity.ok(responseDtos);
     }
 
