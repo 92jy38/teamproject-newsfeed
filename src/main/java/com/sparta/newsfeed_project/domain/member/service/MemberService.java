@@ -25,6 +25,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+    private final String SUBJECT_ATTRIBUTE_KEY = "loggedInWithId";
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final PostService postService;
@@ -66,9 +67,7 @@ public class MemberService {
      * @since 2024-10-21
      */
     public ResponseMemberDto searchMember(HttpServletRequest req, Long id) throws ResponseException {
-        // TODO. khj jwt 완성시 아래 주석으로 대체
-        // Member loginMember = (Member) req.getAttribute("member");
-        Member loginMember = Member.builder().id(1L).build();
+        Member loginMember = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
         Member findMember = findById(id);
         MemberDto memberDto = createMemberDto(loginMember.getId(), findMember);
         return ResponseMemberDto.create(memberDto, ResponseCode.SUCCESS_SEARCH_USER);
@@ -114,9 +113,7 @@ public class MemberService {
      */
     @Transactional
     public ResponseStatusDto updateMember(HttpServletRequest req, RequestModifyMemberDto requestDto) throws ResponseException {
-        // TODO. khj jwt완성시 아래 주석으로 대체
-        // Member loginMember = (Member) req.getAttribute("member");
-        Member loginMember = Member.builder().id(1L).password("$2a$10$JnwGahVnEnFylzCnKvB4YOVXGAACxs2VbQgWDaJDqOz8X3AZ3Mlt6").build();
+        Member loginMember = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
         validateUpdatePassword(requestDto, loginMember);
         Member updateMember = findById(loginMember.getId());
 
@@ -151,9 +148,7 @@ public class MemberService {
      */
     @Transactional
     public ResponseStatusDto deleteMember(HttpServletRequest req, RequestRemoveMemberDto requestDto) throws ResponseException {
-        // TODO. khj jwt완성시 아래 주석으로 대체.
-        // Member loginMember = (Member) req.getAttribute("member");
-        Member loginMember = Member.builder().id(1L).password("$2a$10$zbcSdhAUvUfopwfOF0nE5epVpvCfgjoP9Dh61yqvk2KQJSuZ1xAIe").build();
+        Member loginMember = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
         if (!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
 
