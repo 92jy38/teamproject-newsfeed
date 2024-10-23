@@ -2,10 +2,12 @@ package com.sparta.newsfeed_project.domain.member.controller;
 
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
-import com.sparta.newsfeed_project.domain.member.dto.*;
+import com.sparta.newsfeed_project.domain.member.dto.RequestCreateMemberDto;
+import com.sparta.newsfeed_project.domain.member.dto.RequestModifyMemberDto;
+import com.sparta.newsfeed_project.domain.member.dto.RequestRemoveMemberDto;
+import com.sparta.newsfeed_project.domain.member.dto.ResponseMemberDto;
 import com.sparta.newsfeed_project.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,35 +37,6 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(memberService.createMember(requestDto));
-    }
-
-    /**
-     * 로그인 API
-     *
-     * @param res        HttpServletResponse 객체
-     * @param requestDto 로그인 정보 (JSON 형태)
-     * @return 로그인 처리 결과
-     * @since 2023-10-21
-     */
-    @PostMapping("/members/login")
-    public ResponseEntity<ResponseStatusDto> login(HttpServletResponse res, @RequestBody @Valid RequestSearchMemberDto requestDto) throws ResponseException {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(memberService.login(res, requestDto));
-    }
-
-    /**
-     * 로그아웃 API
-     *
-     * @param res HttpServletResponse 객체
-     * @return 로그인 처리 결과
-     * @since 2023-10-21
-     */
-    @PostMapping("/members/logout")
-    public ResponseEntity<ResponseStatusDto> logout(HttpServletResponse res) throws ResponseException {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(memberService.logout(res));
     }
 
     /**
