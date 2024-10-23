@@ -502,6 +502,6 @@ http://localhost:8080/api/buddies/{toUserId}
 
 
 ## Application 핵심 기능 시연 영상
-<iframe width="560" height="315" src="https://www.youtube.com/embed/tDi-tSmUjvs?si=saj_dNBmvvAWDoi0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![Watch the video](https://img.youtube.com/vi/tDi-tSmUjvs/0.jpg)](https://www.youtube.com/watch?v=tDi-tSmUjvs)
 
 
