@@ -24,4 +24,5 @@ public class ResponseException extends Exception {
         this.responseCode = responseCode;
         this.message = message;
     }
+
 }

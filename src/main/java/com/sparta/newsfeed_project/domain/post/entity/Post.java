@@ -7,6 +7,7 @@ import com.sparta.newsfeed_project.domain.post.dto.ResponsePostDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class Post extends Timestamped {
     private Member member;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
     public static Post from(String caption, String downloadLink, Member member) {

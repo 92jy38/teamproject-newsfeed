@@ -37,14 +37,9 @@ public enum ResponseCode {
     MEMBER_PASSWORD_DUPLICATED(HttpStatus.CONFLICT, "비밀번호가 중복됩니다"),
     MEMBER_EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이메일이 중복됩니다"),
 
-    // 일정 관련 성공 코드
-    SUCCESS_CREATE_SCHEDULE(HttpStatus.CREATED, "일정 등록 성공"),
-    SUCCESS_SEARCH_SCHEDULE(HttpStatus.OK, "일정 조회 성공"),
-    SUCCESS_UPDATE_SCHEDULE(HttpStatus.OK, "일정 수정 성공"),
-    SUCCESS_DELETE_SCHEDULE(HttpStatus.NO_CONTENT, "일정 삭제 성공"),
-
-    // 일정 관련 에러 코드
-    SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 삭제된 일정입니다."),
+    // 게시글 관련 에러 코드
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 삭제된 게시글 입니다."),
+    POST_INVALID(HttpStatus.BAD_REQUEST, "본인의 게시물이 아닙니다."),
 
     // 댓글 관련 성공 코드
     SUCCESS_CREATE_COMMENT(HttpStatus.CREATED, "댓글 등록 성공"),

@@ -4,6 +4,8 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.common.jwt.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.post.dto.RequestPostDeleteDto;
@@ -40,138 +42,101 @@ public class PostService {
     private final PasswordEncoder passwordEncoder;
 
     @EventListener
-    public void init(ApplicationReadyEvent event) {
-        try {
-            FileInputStream serviceAccount = new FileInputStream("firebase.json");
+    public void init(ApplicationReadyEvent event) throws IOException  {
 
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setStorageBucket("nuri-8c58d.appspot.com")
-                    .build();
+        FileInputStream serviceAccount = new FileInputStream("firebase.json");
 
-            FirebaseApp.initializeApp(options);
+        FirebaseOptions options = FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("nuri-8c58d.appspot.com")
+                .build();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FirebaseApp.initializeApp(options);
+
     }
 
 
-    public ResponsePostDto createPost(RequestPostDto requestDto, HttpServletRequest req) {
+    public ResponsePostDto createPost(RequestPostDto requestDto, HttpServletRequest req) throws IOException {
 
-        try {
+        // Base64 -> Image
+        MultipartFile multipartFile = new Base64ToImage(requestDto.getImgData());
 
-            // Base64 -> Image
-            MultipartFile multipartFile = new Base64ToImage(requestDto.getImgData());
+        // firebase storage upload/download
+        Storage storage = new Storage(multipartFile);
+        storage.upload();
+        String downloadLink = storage.download();
 
-            // firebase storage upload/download
-            Storage storage = new Storage(multipartFile);
-            storage.upload();
-            String downloadLink = storage.download();
+        // Member 정보 추가(코드 추가 필요)
+        Member member = (Member) req.getAttribute("loggedInWithId");
+        Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink, member));
 
-            // Member 정보 추가(코드 추가 필요)
-            Member member = (Member) req.getAttribute("loggedInWithId");
-            Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink, member));
-
-            return post.to();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            throw new IllegalArgumentException("이미지 업로드/다운로드에 실패했습니다.");
-        }
+        return post.to();
 
     }
 
     public ResponsePostPage findAllPost(int page, int size, String criteria, HttpServletRequest req) {
-        try {
 
-            // Cookie에서 멤버ID를 추출하여 맞팔 목록 조회
-            Member member = (Member) req.getAttribute("loggedInWithId");
-            List<Long> idArray = buddiesRepository.findIdListByFromUserId(member.getId());
-            idArray.add(member.getId());
+        // Cookie에서 멤버ID를 추출하여 맞팔 목록 조회
+        Member member = (Member) req.getAttribute("loggedInWithId");
+        List<Long> idArray = buddiesRepository.findIdListByFromUserId(member.getId());
+        idArray.add(member.getId());
 
-            Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, criteria));
-            Page<Post> pages = postRepository.findAllPost(idArray, pageable);
-            return new ResponsePostPage(pages);
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            throw new IllegalArgumentException("게시글을 조회하는데 실패했습니다.");
-        }
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, criteria));
+        Page<Post> pages = postRepository.findAllPost(idArray, pageable);
+        return new ResponsePostPage(pages);
 
     }
 
-    public ResponsePostDto findByPostId(Long id) {
-        try {
+    public ResponsePostDto findByPostId(Long id) throws ResponseException{
 
-            Post post = postRepository.findById(id).orElseThrow();
-            return post.to();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("게시글을 조회하는데 실패했습니다.");
-        }
-
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResponseException(ResponseCode.POST_NOT_FOUND));
+        return post.to();
     }
 
     @Transactional
-    public ResponsePostDto modifyPost(Long id, RequestPostDto requestDto, HttpServletRequest req) {
-        try {
+    public ResponsePostDto modifyPost(Long id, RequestPostDto requestDto, HttpServletRequest req) throws ResponseException, IOException{
 
-            // Member 패스워드 확인(코드 추가 필요)
-            Member member = (Member) req.getAttribute("loggedInWithId");
-            if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-                throw new IllegalArgumentException("패스워드가 틀립니다.");
-            }
-
-            // 본인 게시물을 수정하는 것이 맞는지 확인
-            Post post = postRepository.findById(id).orElseThrow();
-            if(!Objects.equals(member.getId(), post.getMember().getId())) {
-                throw new IllegalArgumentException("본인의 게시물이 아닙니다.");
-            }
-
-            // Base64 -> Image
-            MultipartFile multipartFile = new Base64ToImage(requestDto.getImgData());
-
-            // firebase storage upload/download
-            Storage storage = new Storage(multipartFile);
-            storage.upload();
-            String downloadLink = storage.download();
-
-            post.update(requestDto.getCaption(), downloadLink);
-            return post.to();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("게시글을 수정하는데 실패했습니다.");
+        // Member 패스워드 확인(코드 추가 필요)
+        Member member = (Member) req.getAttribute("loggedInWithId");
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
         }
+
+        // 본인 게시물을 수정하는 것이 맞는지 확인
+        Post post = postRepository.findById(id).orElseThrow();
+        if(!Objects.equals(member.getId(), post.getMember().getId())) {
+            throw new ResponseException(ResponseCode.POST_INVALID);
+        }
+
+        // Base64 -> Image
+        MultipartFile multipartFile = new Base64ToImage(requestDto.getImgData());
+
+        // firebase storage upload/download
+        Storage storage = new Storage(multipartFile);
+        storage.upload();
+        String downloadLink = storage.download();
+
+        post.update(requestDto.getCaption(), downloadLink);
+        return post.to();
+
     }
 
-    public void deletePost(Long id, RequestPostDeleteDto requestDto, HttpServletRequest req) {
-        try {
+    public void deletePost(Long id, RequestPostDeleteDto requestDto, HttpServletRequest req) throws ResponseException {
 
-            // Member 패스워드 확인(코드 추가 필요)
-            Member member = (Member) req.getAttribute("loggedInWithId");
-            if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-                throw new IllegalArgumentException("패스워드가 틀립니다.");
-            }
-
-            // 본인 게시물을 수정하는 것이 맞는지 확인
-            Post post = postRepository.findById(id).orElseThrow();
-            if(!Objects.equals(member.getId(), post.getMember().getId())) {
-                throw new IllegalArgumentException("본인의 게시물이 아닙니다.");
-            }
-
-            // Member 패스워드 확인(코드 추가 필요)
-            postRepository.deleteById(id);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("게시글을 삭제하는데 실패했습니다.");
+        // Member 패스워드 확인(코드 추가 필요)
+        Member member = (Member) req.getAttribute("loggedInWithId");
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
         }
+
+        // 본인 게시물을 수정하는 것이 맞는지 확인
+        Post post = postRepository.findById(id).orElseThrow();
+        if(!Objects.equals(member.getId(), post.getMember().getId())) {
+            throw new ResponseException(ResponseCode.POST_INVALID);
+        }
+
+        // Member 패스워드 확인(코드 추가 필요)
+        postRepository.deleteById(id);
 
     }
 

@@ -1,4 +1,4 @@
-package com.sparta.newsfeed_project;
+package com.sparta.newsfeed_project.domain.common.buddies;
 
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostPage;
