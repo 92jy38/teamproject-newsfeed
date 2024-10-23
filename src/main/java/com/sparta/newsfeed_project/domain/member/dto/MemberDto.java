@@ -23,7 +23,8 @@ public class MemberDto {
     private String nickname;
     private String username;
     private String introduce;
-    private int buddyCount;
+    private int fromBuddyCount;
+    private int toBuddyCount;
     private int postCount;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;

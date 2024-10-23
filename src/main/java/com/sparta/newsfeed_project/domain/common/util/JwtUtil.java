@@ -1,4 +1,4 @@
-package com.sparta.newsfeed_project.domain.common.jwt;
+package com.sparta.newsfeed_project.domain.common.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -62,7 +62,6 @@ public class JwtUtil {
     public void addAsCookie(HttpServletResponse response, String value) {
         try {
             String serializedValue = URLEncoder.encode(value, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-//            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, createTokenString(serializedValue));
             Cookie cookie = new Cookie(AUTHORIZATION_HEADER, serializedValue);
             cookie.setPath("/");
             response.addCookie(cookie);

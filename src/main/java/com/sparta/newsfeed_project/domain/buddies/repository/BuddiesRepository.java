@@ -1,4 +1,3 @@
-
 package com.sparta.newsfeed_project.domain.buddies.repository;
 
 import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
@@ -24,5 +23,9 @@ public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
 
     Buddies findByFromUserId(Long fromUserId);
 
-}
+    List<Buddies> findByFromUserIdOrToUserId(Long fromUserId, Long toUserId);
 
+    Long countByFromUserId(Long fromUserId);
+
+    Long countByToUserId(Long fromUserId);
+}

@@ -1,6 +1,8 @@
 package com.sparta.newsfeed_project.domain.common.filter;
 
-import com.sparta.newsfeed_project.domain.common.jwt.JwtUtil;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
+import com.sparta.newsfeed_project.domain.common.util.JwtUtil;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
@@ -20,7 +22,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthFilter extends HttpFilter {
     private final JwtUtil jwtUtil;
-    private final MemberRepository memberRepository;
 
     // 필터 성공 시, 요청 객체에 포함되는 사용자 정보 (id) 의 속성 키값
     private final String SUBJECT_ATTRIBUTE_KEY = "loggedInWithId";
@@ -29,24 +30,19 @@ public class AuthFilter extends HttpFilter {
     private final String[] JWT_BYPASS_PATHS = {
             "/api/members","/api/example"
     };
+    private final MemberRepository memberRepository;
 
-    // 누리 로직 추가
     @Override
-    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException, NullPointerException {
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String url = request.getRequestURI();
 
         if (!(StringUtils.hasText(url) && (urlMatches(url, JWT_BYPASS_PATHS)))) {
             String token = jwtUtil.getTokenFromRequest(request);
             if (StringUtils.hasText(token)) {
                 String postJwt = jwtUtil.removeBearerPrefix(token);
-                String subject = jwtUtil.getSubject(postJwt);
-
-                // 누리 로직 추가
-                Member member = memberRepository.findById(Long.valueOf(subject)).orElseThrow(() ->
-                        new NullPointerException("Not Found User")
-                );
-
-                request.setAttribute(SUBJECT_ATTRIBUTE_KEY, member);
+                String idFromSubject = jwtUtil.getSubject(postJwt);
+                Member memberFromSubject = memberRepository.findById(Long.valueOf(idFromSubject)).orElseThrow(() -> new ResponseException(ResponseCode.MEMBER_NOT_FOUND));
+                request.setAttribute(SUBJECT_ATTRIBUTE_KEY, memberFromSubject);
             }
         }
 
