@@ -37,16 +37,25 @@ public class Buddies {
         this.fromUserId = request.getFromUserId();
         this.toUserId = request.getToUserId();
     }
-
-    public static Buddies upend(RequestBuddiesDto request) {
+    public static Buddies from(Long memberId,Long userId) {
         Buddies buddies = new Buddies();
-        buddies.initUpend(request);
+        buddies.init(memberId,userId);
+        return buddies;
+    }
+    private void init(Long memberId,Long userId) {
+        this.fromUserId = memberId;
+        this.toUserId = userId;
+    }
+
+    public static Buddies upend(Long memberId,Long userId) {
+        Buddies buddies = new Buddies();
+        buddies.initUpend(memberId,userId);
         return buddies;
     }
 
-    private void initUpend(RequestBuddiesDto request) {
-        this.fromUserId = request.getToUserId();
-        this.toUserId = request.getFromUserId();
+    private void initUpend(Long memberId,Long userId) {
+        this.fromUserId = memberId;
+        this.toUserId = userId;
         this.approved = false;
     }
 

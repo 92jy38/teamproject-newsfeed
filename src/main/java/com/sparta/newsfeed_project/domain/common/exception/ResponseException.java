@@ -24,4 +24,5 @@ public class ResponseException extends RuntimeException {
         this.responseCode = responseCode;
         this.message = message;
     }
+
 }

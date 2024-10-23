@@ -34,11 +34,10 @@ public class Storage {
     public String download() {
 
         String downloadToken = UUID.randomUUID().toString();
-        String downloadLink = String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&token=%s",
+        return String.format("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&token=%s",
                 bucket.getName(),
                 blob.getName(),
                 downloadToken
         );
-        return downloadLink;
     }
 }

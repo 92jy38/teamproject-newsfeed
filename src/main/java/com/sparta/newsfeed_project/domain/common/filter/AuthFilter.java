@@ -28,7 +28,7 @@ public class AuthFilter extends HttpFilter {
 
     // 로그인 절차를 생략할 API 경로 추가
     private final String[] JWT_BYPASS_PATHS = {
-            "/api","/api/example"
+            "/api/members","/api/example"
     };
     private final MemberRepository memberRepository;
 
