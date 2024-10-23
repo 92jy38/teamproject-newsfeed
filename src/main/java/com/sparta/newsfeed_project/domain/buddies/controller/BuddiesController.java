@@ -2,6 +2,7 @@ package com.sparta.newsfeed_project.domain.buddies.controller;
 
 import com.sparta.newsfeed_project.domain.buddies.dto.RequestBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.dto.ResponseBuddiesDto;
+import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
 import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.member.entity.Member;

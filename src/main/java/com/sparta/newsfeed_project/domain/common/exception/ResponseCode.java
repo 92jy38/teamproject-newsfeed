@@ -48,13 +48,17 @@ public enum ResponseCode {
 
     // TODO 보완 필요 DB & 서버 관련 에러 코드
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러가 발생 하였습니다."),
-    UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류"),
 
+    //친구 등록 관련 에러코드
+    BUDDIES_DUOLICATION_ID_ERROR(HttpStatus.CONFLICT, "중복된 아이디입니다."),
+    BUDDIES_DUOLICATION_ERROR(HttpStatus.CONFLICT, "존재하는 친구 목록입니다."),
+    BUDDIES_NULL_ERROR(HttpStatus.NOT_FOUND, "목록에 존재하지 않습니다."),
 
     // 기타 에러 코드
     BAD_INPUT(HttpStatus.BAD_REQUEST, "잘못된 값 입력"),
     FAIL_ENCODING(HttpStatus.BAD_REQUEST, "잘못된 인코딩을 사용하였습니다."),
     UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류");
+
 
     private final HttpStatus httpStatus;
     private final String message;
