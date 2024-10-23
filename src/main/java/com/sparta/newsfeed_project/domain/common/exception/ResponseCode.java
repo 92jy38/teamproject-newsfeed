@@ -64,7 +64,7 @@ public enum ResponseCode {
     // 댓글 관련 에러 코드
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     COMMENT_INVALID_PERMISSION(HttpStatus.FORBIDDEN, "댓글에 대한 권한이 없습니다"),
-
+    UNAUTHORIZED(HttpStatus.FORBIDDEN, "로그인 상태를 확인 바랍니다"),
 
     // TODO 보완 필요 DB & 서버 관련 에러 코드
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러가 발생 하였습니다."),
