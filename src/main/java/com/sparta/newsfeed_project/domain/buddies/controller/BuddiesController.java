@@ -6,6 +6,7 @@ import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,6 +96,7 @@ public class BuddiesController {
     @GetMapping("/List")
     public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddies() {
 
+
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -107,3 +109,4 @@ public class BuddiesController {
     }
 
 }
+

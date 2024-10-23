@@ -16,6 +16,7 @@ public class BuddiesService {
 
     private final BuddiesRepository buddiesRepository;
 
+
     public ResponseBuddiesDto createBuddies(Long memberId, Long userId) {
         if (memberId.equals(userId)) {
             throw new IllegalArgumentException("중복된 아이디입니다.");
@@ -62,4 +63,40 @@ public class BuddiesService {
         return buddies.stream().map(Buddies::to).toList();
     }
 
+
+
+
+    /**
+     * 회원의 친구 관계를 모두 삭제합니다.
+     *
+     * @param memberId 회원 ID
+     * @since 2024-10-23
+     */
+    public void deleteMemberBuddies(Long memberId) {
+        List<Buddies> buddies = buddiesRepository.findByFromUserIdOrToUserId(memberId, memberId);
+        if (buddies != null && !buddies.isEmpty())
+            buddiesRepository.deleteAll(buddies);
+
+    }
+
+    /**
+     * 회원이 친구 추가한 친구 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 친구 수
+     */
+    public int getFromBuddyCount(Long memberId) {
+        return buddiesRepository.countByFromUserId(memberId).intValue();
+    }
+
+    /**
+     * 회원을 친구 추가한 친구 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 친구 수
+     */
+    public int getToBuddyCount(Long memberId) {
+        return buddiesRepository.countByToUserId(memberId).intValue();
+    }
 }
+

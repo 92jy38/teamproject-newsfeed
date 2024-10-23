@@ -4,8 +4,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
-import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
-import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.dto.RequestPostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostPage;
@@ -16,7 +14,6 @@ import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -151,5 +148,28 @@ public class PostService {
             throw new IllegalArgumentException("게시글을 삭제하는데 실패했습니다.");
         }
 
+    }
+
+    /**
+     * 회원의 게시물 수를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 게시물 수
+     * @since 2024-10-23
+     */
+    public int getPostCount(Long memberId) {
+        return postRepository.countByMemberId(memberId).intValue();
+    }
+
+    /**
+     * 회원이 작성한 게시글을 모두 삭제합니다.
+     *
+     * @param memberId 회원 ID
+     * @since 2024-10-23
+     */
+    public void deleteMemberPosts(Long memberId) {
+        List<Post> posts = postRepository.findAllByMemberId(memberId);
+        if (posts != null && !posts.isEmpty())
+            postRepository.deleteAll(posts);
     }
 }

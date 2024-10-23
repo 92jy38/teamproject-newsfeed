@@ -6,18 +6,17 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ResponseCommentDto {
-    // username 일지 nickname 일지 멤머 담당자와 상의
     private final Long id;
     private final String content;
     private final String username;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private final LocalDateTime createAt;
+    private final LocalDateTime updateAt;
 
     public ResponseCommentDto(Comment comment) {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.username = comment.getMember().getUsername();
-        this.createdAt = comment.getCreatedAt();
-        this.updatedAt = comment.getUpdatedAt();
+        this.createAt = comment.getCreateAt();
+        this.updateAt = comment.getUpdateAt();
     }
 }
