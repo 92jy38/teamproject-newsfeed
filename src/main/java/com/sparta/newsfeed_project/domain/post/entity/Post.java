@@ -28,8 +28,8 @@ public class Post extends Timestamped {
     @JoinColumn(name = "memberId")
     private Member member;
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-//    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public static Post from(String caption, String downloadLink, Member member) {
         Post post = new Post();

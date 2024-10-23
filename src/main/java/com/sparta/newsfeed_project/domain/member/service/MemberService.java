@@ -1,5 +1,6 @@
 package com.sparta.newsfeed_project.domain.member.service;
 
+import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
@@ -7,6 +8,7 @@ import com.sparta.newsfeed_project.domain.common.util.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.dto.*;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
+import com.sparta.newsfeed_project.domain.post.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,11 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
-//    private final TempBuddyRepository buddyRepository;
-//    private final TempPostRepository postRepository;
+    private final String SUBJECT_ATTRIBUTE_KEY = "loggedInWithId";
     private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
+    private final PostService postService;
+    private final BuddiesService buddiesService;
 
     /**
      * 회원가입을 처리합니다.
@@ -36,10 +39,10 @@ public class MemberService {
      * @since 2024-10-21
      */
     public ResponseStatusDto createMember(RequestCreateMemberDto requestDto) throws ResponseException {
-        // TODO. khj 두번째 parameter에 암호화된 비밀번호 넣어줄 것.
-        Member member = requestDto.from(requestDto, passwordEncoder.encoder(requestDto.getPassword()));
+        validateCreateInfo(requestDto.getEmail());
+        String encodingPassword = passwordEncoder.encoder(requestDto.getPassword());
+        Member member = requestDto.from(requestDto, encodingPassword);
 
-        validateCreateInfo(member);
         memberRepository.save(member);
         return new ResponseStatusDto(ResponseCode.SUCCESS_CREATE_USER);
     }
@@ -47,12 +50,12 @@ public class MemberService {
     /**
      * 사용자 생성 시 올바른 정보를 입력하였는지 검사합니다.
      *
-     * @param member 생성하려는 사용자 정보
+     * @param email 생형하려는 이메일
      * @throws ResponseException 아이디가 중복될 경우 발생
      * @since 2024-10-21
      */
-    public void validateCreateInfo(Member member) throws ResponseException {
-        Member findMember = memberRepository.findByEmail(member.getEmail());
+    public void validateCreateInfo(String email) throws ResponseException {
+        Member findMember = memberRepository.findByEmail(email);
         if (findMember != null)
             throw new ResponseException(ResponseCode.MEMBER_EMAIL_DUPLICATED);
     }
@@ -65,31 +68,31 @@ public class MemberService {
      * @since 2024-10-21
      */
     public ResponseMemberDto searchMember(HttpServletRequest req, Long id) throws ResponseException {
-        // TODO. khj jwt 완성시 아래 주석으로 대체
-        // Member loginMember = (Member) req.getAttribute("member");
-        Member loginMember = Member.builder().id(1L).build();
-        Member findMember = findById(loginMember.getId());
-        MemberDto memberDto = createMemberDto(id, findMember);
+        Member loginMember = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
+        Member findMember = findById(id);
+        MemberDto memberDto = createMemberDto(loginMember.getId(), findMember);
         return ResponseMemberDto.create(memberDto, ResponseCode.SUCCESS_SEARCH_USER);
     }
 
     /**
      * 회원 정보 DTO를 생성합니다.
      *
-     * @param id     회원 ID
-     * @param member 회원 엔티티
+     * @param id     현재 로그인한 회원 ID
+     * @param member 정보를 조회할 회원 엔티티
      * @return 변환된 회원 DTO
      */
     private MemberDto createMemberDto(Long id, Member member) {
         boolean hiddenInfo = !Objects.equals(member.getId(), id);
-        int buddyCount = getBuddyCount(member.getId());
-        int postCount = getPostCount(member.getId());
+        int fromBuddyCount = buddiesService.getFromBuddyCount(member.getId());
+        int toBuddyCount = buddiesService.getToBuddyCount(member.getId());
+        int postCount = postService.getPostCount(member.getId());
 
         MemberDto memberDto = new MemberDto();
         memberDto.setId(id);
         memberDto.setEmail(member.getEmail());
         memberDto.setNickname(member.getNickname());
-        memberDto.setBuddyCount(buddyCount);
+        memberDto.setFromBuddyCount(fromBuddyCount);
+        memberDto.setToBuddyCount(toBuddyCount);
         memberDto.setPostCount(postCount);
         memberDto.setUsername(member.getUsername());
         memberDto.setUpdateAt(member.getUpdateAt());
@@ -102,29 +105,6 @@ public class MemberService {
     }
 
     /**
-     * 회원의 친구 수를 조회합니다.
-     *
-     * @param id 회원 ID
-     * @return 친구 수
-     */
-    private int getBuddyCount(Long id) {
-//        List<TempBuddy> buddies = buddyRepository.findByStateAndFromIdOrToId(true, id, id);
-//        return buddies == null ? 0 : buddies.size() / 2;
-        return 0;
-    }
-
-    /**
-     * 회원의 게시물 수를 조회합니다.
-     *
-     * @param id 회원 ID
-     * @return 게시물 수
-     */
-    private int getPostCount(Long id) {
-//        return postRepository.countByMemberId(id).intValue();
-        return 0;
-    }
-
-    /**
      * 회원 정보를 수정합니다.
      *
      * @param req        HttpServletRequest 객체
@@ -134,13 +114,12 @@ public class MemberService {
      */
     @Transactional
     public ResponseStatusDto updateMember(HttpServletRequest req, RequestModifyMemberDto requestDto) throws ResponseException {
-        // TODO. khj jwt완성시 아래 주석으로 대체
-        // Member loginMember = (Member) req.getAttribute("member");
-        Member loginMember = Member.builder().id(1L).password("1q2w3e4r#").build();
+        Member loginMember = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
         validateUpdatePassword(requestDto, loginMember);
         Member updateMember = findById(loginMember.getId());
-        // TODO. khj 암호화된 비밀번호 넣어줄 것.
-        requestDto.setNewPassword(requestDto.getPassword());
+
+        String newPassword = passwordEncoder.encoder(requestDto.getNewPassword());
+        requestDto.setNewPassword(newPassword);
         updateMember.update(requestDto);
         return new ResponseStatusDto(ResponseCode.SUCCESS_UPDATE_USER);
     }
@@ -154,11 +133,9 @@ public class MemberService {
      * @since 2024-10-21
      */
     private void validateUpdatePassword(RequestModifyMemberDto requestDto, Member loginMember) throws ResponseException {
-        // TODO. khj 그 뭐냐....ㅠㅠ 암튼 그거 비밀번호 암호..?
-        // if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
-        if (!requestDto.getPassword().equals(loginMember.getPassword()))
+        if (!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
-        else if (requestDto.getNewPassword().equals(loginMember.getPassword()))
+        else if (passwordEncoder.matches(requestDto.getNewPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_DUPLICATED);
     }
 
@@ -172,11 +149,8 @@ public class MemberService {
      */
     @Transactional
     public ResponseStatusDto deleteMember(HttpServletRequest req, RequestRemoveMemberDto requestDto) throws ResponseException {
-        // TODO. khj jwt완성시 아래 주석으로 대체.
-        // Member loginMember = (Member) req.getAttribute("member");
-        Member loginMember = Member.builder().id(1L).password("Admin123!").build();
-        // TODO. khj 암호화.. 어쩌구..
-        if (!loginMember.getPassword().equals(requestDto.getPassword()))
+        Member loginMember = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
+        if (!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
 
         Member deleteMember = findById(loginMember.getId());
@@ -184,18 +158,10 @@ public class MemberService {
             throw new ResponseException(ResponseCode.MEMBER_DELETE);
 
         deleteMember.delete();
-        deleteBuddy(loginMember.getId());
-        deletePost(loginMember.getId());
+        buddiesService.deleteMemberBuddies(loginMember.getId());
+        postService.deleteMemberPosts(loginMember.getId());
 
         return new ResponseStatusDto(ResponseCode.SUCCESS_DELETE_USER);
-    }
-
-    private void deleteBuddy(Long id) {
-
-    }
-
-    private void deletePost(Long id) {
-
     }
 
     /**

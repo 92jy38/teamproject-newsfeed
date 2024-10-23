@@ -80,7 +80,7 @@ public class MemberController {
     @DeleteMapping("/members")
     public ResponseEntity<ResponseStatusDto> deleteUser(HttpServletRequest req, @RequestBody @Valid RequestRemoveMemberDto requestDto) throws ResponseException {
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.NO_CONTENT)
                 .body(memberService.deleteMember(req, requestDto));
     }
 }
