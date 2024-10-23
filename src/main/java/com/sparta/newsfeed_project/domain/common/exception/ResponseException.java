@@ -8,7 +8,7 @@ import lombok.Getter;
  * @since 2024-10-03
  */
 @Getter
-public class ResponseException extends Exception {
+public class ResponseException extends RuntimeException {
     private final String result;
     private final ResponseCode responseCode;
     private final String message;
@@ -24,4 +24,5 @@ public class ResponseException extends Exception {
         this.responseCode = responseCode;
         this.message = message;
     }
+
 }

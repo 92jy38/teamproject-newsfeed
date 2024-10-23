@@ -13,7 +13,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * 회원 정보를 담는 Entity 클래스
  *
@@ -66,7 +65,6 @@ public class Member extends Timestamped {
         this.introduce = dto.getIntroduce();
     }
 
-    // 애애앵애ㅡ으
     public void delete() {
         this.deleted = true;
     }

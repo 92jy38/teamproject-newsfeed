@@ -1,6 +1,10 @@
 package com.sparta.newsfeed_project.domain.common.filter;
 
-import com.sparta.newsfeed_project.domain.common.jwt.JwtUtil;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
+import com.sparta.newsfeed_project.domain.common.util.JwtUtil;
+import com.sparta.newsfeed_project.domain.member.entity.Member;
+import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
@@ -24,8 +28,9 @@ public class AuthFilter extends HttpFilter {
 
     // 로그인 절차를 생략할 API 경로 추가
     private final String[] JWT_BYPASS_PATHS = {
-            "/api","/api/example"
+            "/api/members","/api/example"
     };
+    private final MemberRepository memberRepository;
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -35,8 +40,9 @@ public class AuthFilter extends HttpFilter {
             String token = jwtUtil.getTokenFromRequest(request);
             if (StringUtils.hasText(token)) {
                 String postJwt = jwtUtil.removeBearerPrefix(token);
-                String subject = jwtUtil.getSubject(postJwt);
-                request.setAttribute(SUBJECT_ATTRIBUTE_KEY, subject);
+                String idFromSubject = jwtUtil.getSubject(postJwt);
+                Member memberFromSubject = memberRepository.findById(Long.valueOf(idFromSubject)).orElseThrow(() -> new ResponseException(ResponseCode.MEMBER_NOT_FOUND));
+                request.setAttribute(SUBJECT_ATTRIBUTE_KEY, memberFromSubject);
             }
         }
 
