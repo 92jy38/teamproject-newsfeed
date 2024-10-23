@@ -32,7 +32,7 @@ public class MemberController {
      * @return 회원가입 처리 결과
      * @since 2023-10-21
      */
-    @PostMapping("/members")
+    @PostMapping("/members/signup")
     public ResponseEntity<ResponseStatusDto> createUser(@RequestBody @Valid RequestCreateMemberDto requestDto) throws ResponseException {
         return ResponseEntity
                 .status(HttpStatus.CREATED)

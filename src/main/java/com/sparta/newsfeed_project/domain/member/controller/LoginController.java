@@ -2,7 +2,6 @@ package com.sparta.newsfeed_project.domain.member.controller;
 
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
-import com.sparta.newsfeed_project.domain.common.util.JwtUtil;
 import com.sparta.newsfeed_project.domain.member.dto.LoginRequestDto;
 import com.sparta.newsfeed_project.domain.member.service.LoginService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
-    private final JwtUtil jwtUtil;
 
     /**
      * 로그인 API
