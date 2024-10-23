@@ -7,9 +7,7 @@ import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,8 +65,8 @@ public class BuddiesService {
 
 
     public void deletedBuddies(Long memberId) {
-        Buddies fromUser= buddiesRepository.findByFromUserID(memberId);
-        Buddies toUser = buddiesRepository.findByFromUserID(fromUser.getToUserId());
+        Buddies fromUser= buddiesRepository.findByFromUserId(memberId);
+        Buddies toUser = buddiesRepository.findByFromUserId(fromUser.getToUserId());
         buddiesRepository.delete(fromUser);
         buddiesRepository.delete(toUser);
     }

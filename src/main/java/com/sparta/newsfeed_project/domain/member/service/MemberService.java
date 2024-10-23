@@ -3,11 +3,11 @@ package com.sparta.newsfeed_project.domain.member.service;
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
+import com.sparta.newsfeed_project.domain.common.util.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.dto.*;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +26,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 //    private final TempBuddyRepository buddyRepository;
 //    private final TempPostRepository postRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 회원가입을 처리합니다.
@@ -36,7 +37,8 @@ public class MemberService {
      */
     public ResponseStatusDto createMember(RequestCreateMemberDto requestDto) throws ResponseException {
         // TODO. khj 두번째 parameter에 암호화된 비밀번호 넣어줄 것.
-        Member member = requestDto.from(requestDto, requestDto.getPassword());
+        Member member = requestDto.from(requestDto, passwordEncoder.encoder(requestDto.getPassword()));
+
         validateCreateInfo(member);
         memberRepository.save(member);
         return new ResponseStatusDto(ResponseCode.SUCCESS_CREATE_USER);
@@ -53,48 +55,6 @@ public class MemberService {
         Member findMember = memberRepository.findByEmail(member.getEmail());
         if (findMember != null)
             throw new ResponseException(ResponseCode.MEMBER_EMAIL_DUPLICATED);
-    }
-
-    /**
-     * 로그인 합니다.
-     *
-     * @param requestDto 로그인 요청 정보
-     * @return 로그인 결과 (ResponseStatusDto)
-     * @since 2024-10-21
-     */
-    public ResponseStatusDto login(HttpServletResponse res, RequestSearchMemberDto requestDto) throws ResponseException {
-        validateLoginInfo(requestDto.getEmail(), requestDto.getPassword());
-        // TODO. 쿠키 생성 필요
-        return new ResponseStatusDto(ResponseCode.SUCCESS_LOGIN);
-    }
-
-    /**
-     * 로그아웃 합니다.
-     *
-     * @return 로그아웃 결과 (ResponseStatusDto)
-     * @since 2024-10-21
-     */
-    public ResponseStatusDto logout(HttpServletResponse res) throws ResponseException {
-        // TODO. 쿠키 해제
-        return new ResponseStatusDto(ResponseCode.SUCCESS_LOGOUT);
-    }
-
-    /**
-     * 로그인 시 유저 정보를 검사합니다.
-     *
-     * @param email    입력한 email
-     * @param password 입력한 비밀번호
-     * @throws ResponseException 유저 정보가 올바르지 않은 경우 예외를 발생시킵니다.
-     * @since 2024-10-21
-     */
-    public void validateLoginInfo(String email, String password) throws ResponseException {
-        Member findMember = memberRepository.findByEmail(email);
-        if (findMember == null)
-            throw new ResponseException(ResponseCode.MEMBER_NOT_FOUND);
-            // TODO. 암호화된 비밀번호와 비교 필요
-            // else if (!passwordEncoder.matches(inputUser.getPassword(), findUser.getPassword()))
-        else if (!password.equals(findMember.getPassword()))
-            throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
     }
 
     /**
