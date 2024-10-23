@@ -70,6 +70,10 @@ public class LoginService {
         if (!passwordEncoder.matches(password, findMember.getPassword())) {
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
         }
+        // 마지막으로, 찾은 멤버가 혹시나 삭제된 멤버일 경우, 해당 예외를 반환합니다.
+        if (findMember.isDeleted()) {
+            throw new ResponseException(ResponseCode.MEMBER_DELETE);
+        }
 
         // 두 과정이 문제 없다면, 인증된 멤버 엔티티를 반환합니다.
         return findMember;
