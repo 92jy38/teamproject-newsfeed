@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
 
-    Buddies findOneByFromUserIdAndToUserId(Long memberId, Long buddyId);
+    Buddies findOneByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
 
     List<Buddies> findAllByToUserId(Long memberId);
 
@@ -20,8 +20,6 @@ public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
             "         JOIN Buddies b2 ON b1.fromUserId = b2.toUserId AND b1.toUserId = b2.fromUserId\n" +
             "WHERE b1.fromUserId = :memberId AND b1.approved = TRUE AND b2.approved = TRUE")
     List<Long> findIdListByFromUserId(@Param("memberId") Long memberId);
-
-    Buddies findByFromUserId(Long fromUserId);
 
     List<Buddies> findByFromUserIdOrToUserId(Long fromUserId, Long toUserId);
 

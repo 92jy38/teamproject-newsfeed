@@ -1,12 +1,10 @@
 package com.sparta.newsfeed_project.domain.buddies.controller;
 
-import com.sparta.newsfeed_project.domain.buddies.dto.RequestBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.dto.ResponseBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,10 +60,10 @@ public class BuddiesController {
     }
 
     @PutMapping("/{memberId}")
-    public ResponseEntity<Void> acceptBuddies(@PathVariable Long memberId,HttpServletRequest req) throws ResponseException {
+    public ResponseEntity<Void> acceptBuddies(@PathVariable Long memberId, HttpServletRequest req) throws ResponseException {
         Member member = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
         Long userId = member.getId();
-        buddiesService.acceptBuddies(userId,memberId);
+        buddiesService.acceptBuddies(userId, memberId);
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -78,10 +76,10 @@ public class BuddiesController {
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> deleteBuddies(@PathVariable Long memberId,HttpServletRequest req) throws ResponseException {
+    public ResponseEntity<Void> deleteBuddies(@PathVariable Long memberId, HttpServletRequest req) throws ResponseException {
         Member member = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
         Long userId = member.getId();
-        buddiesService.deleteBuddies(userId,memberId);
+        buddiesService.deleteBuddies(userId, memberId);
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)

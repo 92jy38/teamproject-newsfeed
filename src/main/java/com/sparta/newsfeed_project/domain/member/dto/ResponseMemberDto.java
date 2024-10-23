@@ -2,7 +2,6 @@ package com.sparta.newsfeed_project.domain.member.dto;
 
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
-import com.sparta.newsfeed_project.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
