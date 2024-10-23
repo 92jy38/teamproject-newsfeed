@@ -4,7 +4,7 @@ import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
-import com.sparta.newsfeed_project.domain.common.jwt.PasswordEncoder;
+import com.sparta.newsfeed_project.domain.common.util.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.dto.*;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
@@ -42,6 +42,7 @@ public class MemberService {
         validateCreateInfo(requestDto.getEmail());
         String encodingPassword = passwordEncoder.encoder(requestDto.getPassword());
         Member member = requestDto.from(requestDto, encodingPassword);
+
         memberRepository.save(member);
         return new ResponseStatusDto(ResponseCode.SUCCESS_CREATE_USER);
     }

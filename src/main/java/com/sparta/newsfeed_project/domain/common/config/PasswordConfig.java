@@ -3,7 +3,7 @@ package com.sparta.newsfeed_project.domain.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.sparta.newsfeed_project.domain.common.jwt.PasswordEncoder;
+import com.sparta.newsfeed_project.domain.common.util.PasswordEncoder;
 
 /**
  * 비밀번호 암호화 설정을 담당하는 클래스입니다.

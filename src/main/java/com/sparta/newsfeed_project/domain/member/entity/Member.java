@@ -13,7 +13,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * 회원 정보를 담는 Entity 클래스
  *

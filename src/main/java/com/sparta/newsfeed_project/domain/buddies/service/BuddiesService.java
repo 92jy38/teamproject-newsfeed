@@ -64,6 +64,7 @@ public class BuddiesService {
     }
 
 
+
     /**
      * 회원의 친구 관계를 모두 삭제합니다.
      *
@@ -74,6 +75,7 @@ public class BuddiesService {
         List<Buddies> buddies = buddiesRepository.findByFromUserIdOrToUserId(memberId, memberId);
         if (buddies != null && !buddies.isEmpty())
             buddiesRepository.deleteAll(buddies);
+
     }
 
     /**
