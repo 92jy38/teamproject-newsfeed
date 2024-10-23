@@ -4,6 +4,7 @@ import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.common.jwt.JwtUtil;
+import com.sparta.newsfeed_project.domain.common.jwt.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.dto.*;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
@@ -26,6 +27,7 @@ import java.util.Objects;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 //    private final TempBuddyRepository buddyRepository;
 //    private final TempPostRepository postRepository;
 
@@ -38,7 +40,8 @@ public class MemberService {
      */
     public ResponseStatusDto createMember(RequestCreateMemberDto requestDto) throws ResponseException {
         // TODO. khj 두번째 parameter에 암호화된 비밀번호 넣어줄 것.
-        Member member = requestDto.from(requestDto, requestDto.getPassword());
+//        Member member = requestDto.from(requestDto, requestDto.getPassword());
+        Member member = requestDto.from(requestDto, passwordEncoder.encoder(requestDto.getPassword()));
         validateCreateInfo(member);
         memberRepository.save(member);
         return new ResponseStatusDto(ResponseCode.SUCCESS_CREATE_USER);

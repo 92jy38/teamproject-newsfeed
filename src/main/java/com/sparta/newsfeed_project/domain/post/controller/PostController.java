@@ -1,6 +1,7 @@
 package com.sparta.newsfeed_project.domain.post.controller;
 
 
+import com.sparta.newsfeed_project.domain.post.dto.RequestPostDeleteDto;
 import com.sparta.newsfeed_project.domain.post.dto.RequestPostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostPage;
@@ -34,7 +35,7 @@ public class PostController {
     public ResponseEntity<ResponsePostPage> findAllPost(@RequestParam(required = false, defaultValue = "1") int page,
                                                         @RequestParam(required = false, defaultValue = "10") int size,
                                                         @RequestParam(required = false, defaultValue = "createAt") String criteria,
-                                                        @RequestBody HttpServletRequest req) {
+                                                        HttpServletRequest req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(postService.findAllPost(page, size, criteria, req));
@@ -51,17 +52,17 @@ public class PostController {
 
     // 게시물 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ResponsePostDto> modifyPost(@PathVariable Long id, @RequestBody @Valid RequestPostDto requestDto) {
+    public ResponseEntity<ResponsePostDto> modifyPost(@PathVariable Long id, @RequestBody @Valid RequestPostDto requestDto, HttpServletRequest req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.modifyPost(id, requestDto));
+                .body(postService.modifyPost(id, requestDto, req));
     }
 
 
     // 게시물 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    public ResponseEntity<Void> deletePost(@PathVariable Long id, @RequestBody RequestPostDeleteDto requestDto, HttpServletRequest req) {
+        postService.deletePost(id, requestDto, req);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

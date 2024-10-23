@@ -4,9 +4,9 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
-import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
+import com.sparta.newsfeed_project.domain.common.jwt.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
-import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
+import com.sparta.newsfeed_project.domain.post.dto.RequestPostDeleteDto;
 import com.sparta.newsfeed_project.domain.post.dto.RequestPostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostPage;
@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final BuddiesRepository buddiesRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @EventListener
     public void init(ApplicationReadyEvent event) {
@@ -71,7 +73,6 @@ public class PostService {
             Member member = (Member) req.getAttribute("loggedInWithId");
             Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink, member));
 
-//            Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink));
             return post.to();
 
         } catch (Exception e) {
@@ -86,9 +87,9 @@ public class PostService {
         try {
 
             // Cookie에서 멤버ID를 추출하여 맞팔 목록 조회
-            String memberId = (String) req.getAttribute("loggedInWithId");
-            List<Long> idArray = buddiesRepository.findIdListByFromUserId(Long.valueOf(memberId));
-            idArray.add(Long.valueOf(memberId));
+            Member member = (Member) req.getAttribute("loggedInWithId");
+            List<Long> idArray = buddiesRepository.findIdListByFromUserId(member.getId());
+            idArray.add(member.getId());
 
             Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, criteria));
             Page<Post> pages = postRepository.findAllPost(idArray, pageable);
@@ -116,12 +117,20 @@ public class PostService {
     }
 
     @Transactional
-    public ResponsePostDto modifyPost(Long id, RequestPostDto requestDto) {
+    public ResponsePostDto modifyPost(Long id, RequestPostDto requestDto, HttpServletRequest req) {
         try {
 
             // Member 패스워드 확인(코드 추가 필요)
+            Member member = (Member) req.getAttribute("loggedInWithId");
+            if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+                throw new IllegalArgumentException("패스워드가 틀립니다.");
+            }
 
+            // 본인 게시물을 수정하는 것이 맞는지 확인
             Post post = postRepository.findById(id).orElseThrow();
+            if(!Objects.equals(member.getId(), post.getMember().getId())) {
+                throw new IllegalArgumentException("본인의 게시물이 아닙니다.");
+            }
 
             // Base64 -> Image
             MultipartFile multipartFile = new Base64ToImage(requestDto.getImgData());
@@ -141,8 +150,20 @@ public class PostService {
         }
     }
 
-    public void deletePost(Long id) {
+    public void deletePost(Long id, RequestPostDeleteDto requestDto, HttpServletRequest req) {
         try {
+
+            // Member 패스워드 확인(코드 추가 필요)
+            Member member = (Member) req.getAttribute("loggedInWithId");
+            if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+                throw new IllegalArgumentException("패스워드가 틀립니다.");
+            }
+
+            // 본인 게시물을 수정하는 것이 맞는지 확인
+            Post post = postRepository.findById(id).orElseThrow();
+            if(!Objects.equals(member.getId(), post.getMember().getId())) {
+                throw new IllegalArgumentException("본인의 게시물이 아닙니다.");
+            }
 
             // Member 패스워드 확인(코드 추가 필요)
             postRepository.deleteById(id);
@@ -153,4 +174,5 @@ public class PostService {
         }
 
     }
+
 }

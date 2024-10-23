@@ -25,7 +25,7 @@ class AuthFilterTest {
     void setUp() {
         this.jwtUtil = new JwtUtil();
         jwtUtil.testInit();
-        this.authFilter = new AuthFilter(jwtUtil);
+//        this.authFilter = new AuthFilter(jwtUtil);
     }
 
     @Test
