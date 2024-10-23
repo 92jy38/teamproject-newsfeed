@@ -6,7 +6,7 @@ import com.google.firebase.FirebaseOptions;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
-import com.sparta.newsfeed_project.domain.common.jwt.PasswordEncoder;
+import com.sparta.newsfeed_project.domain.common.util.PasswordEncoder;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.post.dto.RequestPostDeleteDto;
 import com.sparta.newsfeed_project.domain.post.dto.RequestPostDto;

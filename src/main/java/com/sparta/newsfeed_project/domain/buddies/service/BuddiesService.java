@@ -1,7 +1,6 @@
 package com.sparta.newsfeed_project.domain.buddies.service;
 
 
-import com.sparta.newsfeed_project.domain.buddies.dto.RequestBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.dto.ResponseBuddiesDto;
 import com.sparta.newsfeed_project.domain.buddies.entity.Buddies;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
@@ -27,7 +26,7 @@ public class BuddiesService {
         Buddies buddies = Buddies.from(memberId, userId);
         buddies.Approved(true);
         buddiesRepository.save(buddies);
-        Buddies acceptBuddies = Buddies.upend(memberId, userId);
+        Buddies acceptBuddies = Buddies.upend(userId, memberId);
         buddiesRepository.save(acceptBuddies);
         return buddies.to();
     }

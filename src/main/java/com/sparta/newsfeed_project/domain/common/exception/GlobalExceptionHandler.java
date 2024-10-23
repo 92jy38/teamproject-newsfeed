@@ -2,7 +2,6 @@ package com.sparta.newsfeed_project.domain.common.exception;
 
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * 예외 처리 클래스.

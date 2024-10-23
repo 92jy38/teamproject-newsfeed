@@ -4,13 +4,11 @@ import com.sparta.newsfeed_project.domain.comment.dto.RequestCommentDto;
 import com.sparta.newsfeed_project.domain.comment.dto.ResponseCommentDto;
 import com.sparta.newsfeed_project.domain.comment.entity.Comment;
 import com.sparta.newsfeed_project.domain.comment.repository.CommentRepository;
-
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.entity.Post;
-import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -92,13 +90,13 @@ public class CommentService {
 
     // 인증된 사용자 ID를 HttpServletRequest에서 가져오는 메서드
     private Long getMemberIdFromRequest(HttpServletRequest request) throws ResponseException {
-        Object memberIdAttr = request.getAttribute("loggedInWithId");
-        if (memberIdAttr == null) {
+        Member member = (Member) request.getAttribute("loggedInWithId");
+        if (member.getId() == null) {
             throw new ResponseException(ResponseCode.UNAUTHORIZED);
         }
 
         try {
-            return Long.parseLong(memberIdAttr.toString());
+            return member.getId();
         } catch (NumberFormatException e) {
             throw new ResponseException(ResponseCode.UNAUTHORIZED);
         }
