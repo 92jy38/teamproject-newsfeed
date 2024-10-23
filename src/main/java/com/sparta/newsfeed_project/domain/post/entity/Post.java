@@ -31,7 +31,7 @@ public class Post extends Timestamped {
     @JoinColumn(name = "member_Id")
     private Member member;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
