@@ -28,8 +28,8 @@ public class Post extends Timestamped {
     @JoinColumn(name = "memberId")
     private Member member;
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-//    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public static Post from(String caption, String downloadLink, Member member) {
         Post post = new Post();
@@ -56,7 +56,7 @@ public class Post extends Timestamped {
 
     public ResponsePostDto to() {
 
-        return new ResponsePostDto(id, caption, imgUrl, "nickname", getCreateAt(), getUpdateAt());
+        return new ResponsePostDto(id, caption, imgUrl, member.getNickname(), getCreateAt(), getUpdateAt());
     }
 
     public void update(String caption, String downloadLink) {

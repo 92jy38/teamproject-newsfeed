@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
 
@@ -17,10 +16,13 @@ public interface BuddiesRepository extends JpaRepository<Buddies, Long> {
 
     boolean existsByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
 
-    @Query("select b.toUserId from Buddies b where b.fromUserId = :memberId and b.approved = true ")
+    @Query("SELECT b1.toUserId\n" +
+            "FROM Buddies b1\n" +
+            "         JOIN Buddies b2 ON b1.fromUserId = b2.toUserId AND b1.toUserId = b2.fromUserId\n" +
+            "WHERE b1.fromUserId = :memberId AND b1.approved = TRUE AND b2.approved = TRUE")
     List<Long> findIdListByFromUserId(@Param("memberId") Long memberId);
 
-    Buddies findByFromUserID(Long fromUserId);
+    Buddies findByFromUserId(Long fromUserId);
 
 }
 

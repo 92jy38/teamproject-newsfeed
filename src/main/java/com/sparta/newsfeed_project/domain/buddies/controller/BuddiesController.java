@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/buddies")
-public class BuddiesConrtroller {
+public class BuddiesController {
 
     private final BuddiesService buddiesService;
 
@@ -31,7 +31,7 @@ public class BuddiesConrtroller {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddyies(@PathVariable Long memberId) {
+    public ResponseEntity<List<ResponseBuddiesDto>> getAllBuddies(@PathVariable Long memberId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(buddiesService.getAllBuddies(memberId));

@@ -3,6 +3,7 @@ package com.sparta.newsfeed_project.domain.member.service;
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
+import com.sparta.newsfeed_project.domain.common.jwt.JwtUtil;
 import com.sparta.newsfeed_project.domain.member.dto.*;
 import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
@@ -24,6 +25,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
 //    private final TempBuddyRepository buddyRepository;
 //    private final TempPostRepository postRepository;
 
@@ -62,9 +64,11 @@ public class MemberService {
      * @return 로그인 결과 (ResponseStatusDto)
      * @since 2024-10-21
      */
+    // 누리 로그인 과정에서 validateLoginInfo 메소드 수정
     public ResponseStatusDto login(HttpServletResponse res, RequestSearchMemberDto requestDto) throws ResponseException {
-        validateLoginInfo(requestDto.getEmail(), requestDto.getPassword());
+        validateLoginInfo(requestDto.getEmail(), requestDto.getPassword(), res);
         // TODO. 쿠키 생성 필요
+
         return new ResponseStatusDto(ResponseCode.SUCCESS_LOGIN);
     }
 
@@ -87,8 +91,12 @@ public class MemberService {
      * @throws ResponseException 유저 정보가 올바르지 않은 경우 예외를 발생시킵니다.
      * @since 2024-10-21
      */
-    public void validateLoginInfo(String email, String password) throws ResponseException {
+    public void validateLoginInfo(String email, String password, HttpServletResponse res) throws ResponseException {
         Member findMember = memberRepository.findByEmail(email);
+        // 누리. 토큰 발급 추가함
+        String token = jwtUtil.createTokenString(String.valueOf(findMember.getId()));
+        jwtUtil.addAsCookie(res, token);
+
         if (findMember == null)
             throw new ResponseException(ResponseCode.MEMBER_NOT_FOUND);
             // TODO. 암호화된 비밀번호와 비교 필요

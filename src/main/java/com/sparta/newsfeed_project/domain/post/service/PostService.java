@@ -5,6 +5,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
 import com.sparta.newsfeed_project.domain.buddies.service.BuddiesService;
+import com.sparta.newsfeed_project.domain.member.entity.Member;
 import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import com.sparta.newsfeed_project.domain.post.dto.RequestPostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostDto;
@@ -13,6 +14,7 @@ import com.sparta.newsfeed_project.domain.post.entity.Post;
 import com.sparta.newsfeed_project.domain.post.image.Base64ToImage;
 import com.sparta.newsfeed_project.domain.post.image.Storage;
 import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -53,7 +55,7 @@ public class PostService {
     }
 
 
-    public ResponsePostDto createPost(RequestPostDto requestDto) {
+    public ResponsePostDto createPost(RequestPostDto requestDto, HttpServletRequest req) {
 
         try {
 
@@ -66,10 +68,10 @@ public class PostService {
             String downloadLink = storage.download();
 
             // Member 정보 추가(코드 추가 필요)
-//            Member member = (Member) req.getAttribute("member");
-//            Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink, member));
+            Member member = (Member) req.getAttribute("loggedInWithId");
+            Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink, member));
 
-            Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink));
+//            Post post = postRepository.save(Post.from(requestDto.getCaption(), downloadLink));
             return post.to();
 
         } catch (Exception e) {
@@ -80,18 +82,17 @@ public class PostService {
 
     }
 
-    public ResponsePostPage findAllPost(int page, int size, String criteria) {
+    public ResponsePostPage findAllPost(int page, int size, String criteria, HttpServletRequest req) {
         try {
 
             // Cookie에서 멤버ID를 추출하여 맞팔 목록 조회
-//            Member member = (Member) req.getAttribute("member");
-//            List<Long> idArray = buddiesRepository.findAllIdByFromUserId(member.getId());
-//            idArray.add(member.getId());
+            String memberId = (String) req.getAttribute("loggedInWithId");
+            List<Long> idArray = buddiesRepository.findIdListByFromUserId(Long.valueOf(memberId));
+            idArray.add(Long.valueOf(memberId));
 
             Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, criteria));
-//            Page<Post> pages = postRepository.findAllPost(idArray, pageable);
-//            return new ResponsePostPage(pages);
-            return null;
+            Page<Post> pages = postRepository.findAllPost(idArray, pageable);
+            return new ResponsePostPage(pages);
 
         } catch (Exception e) {
 

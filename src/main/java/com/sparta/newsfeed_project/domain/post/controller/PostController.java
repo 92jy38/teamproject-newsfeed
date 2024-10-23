@@ -5,6 +5,7 @@ import com.sparta.newsfeed_project.domain.post.dto.RequestPostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostDto;
 import com.sparta.newsfeed_project.domain.post.dto.ResponsePostPage;
 import com.sparta.newsfeed_project.domain.post.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,11 @@ public class PostController {
 
     // 게시물 등록
     @PostMapping()
-    public ResponseEntity<ResponsePostDto> createPost(@RequestBody @Valid RequestPostDto requestDto) {
+    public ResponseEntity<ResponsePostDto> createPost(@RequestBody @Valid RequestPostDto requestDto, HttpServletRequest req) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(postService.createPost(requestDto));
+                .body(postService.createPost(requestDto, req));
 
     }
 
@@ -32,10 +33,11 @@ public class PostController {
     @GetMapping()
     public ResponseEntity<ResponsePostPage> findAllPost(@RequestParam(required = false, defaultValue = "1") int page,
                                                         @RequestParam(required = false, defaultValue = "10") int size,
-                                                        @RequestParam(required = false, defaultValue = "createAt") String criteria) {
+                                                        @RequestParam(required = false, defaultValue = "createAt") String criteria,
+                                                        @RequestBody HttpServletRequest req) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(postService.findAllPost(page, size, criteria));
+                .body(postService.findAllPost(page, size, criteria, req));
 
     }
 

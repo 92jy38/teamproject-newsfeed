@@ -1,6 +1,7 @@
 package com.sparta.newsfeed_project;
 
 import com.sparta.newsfeed_project.domain.buddies.repository.BuddiesRepository;
+import com.sparta.newsfeed_project.domain.post.dto.ResponsePostPage;
 import com.sparta.newsfeed_project.domain.post.entity.Post;
 import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import org.junit.jupiter.api.Test;
@@ -26,21 +27,22 @@ public class BuddiesTest {
 
     @Test
     void test1() {
-        List<Long> idArray = buddiesRepository.findAllIdByFromUserId(5L);
+        List<Long> idArray = buddiesRepository.findIdListByFromUserId(2L);
         idArray.stream().forEach(id -> System.out.println(id));
     }
 
     @Test
     void test2() {
-        List<Long> idArray = buddiesRepository.findAllIdByFromUserId(1L);
-        idArray.add(1L);
+        List<Long> idArray = buddiesRepository.findIdListByFromUserId(2L);
+        idArray.add(2L);
         idArray.stream().forEach(id -> {
             System.out.println(id);
         });
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createAt"));
         Page<Post> pages = postRepository.findAllPost(idArray, pageable);
-        pages.stream().forEach(post -> System.out.println(post));
+        ResponsePostPage post = new ResponsePostPage(pages);
+        post.getPosts().stream().forEach(page -> System.out.println(page.getImgUrl()));
 
     }
 
