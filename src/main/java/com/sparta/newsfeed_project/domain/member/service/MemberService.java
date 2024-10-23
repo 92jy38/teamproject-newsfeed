@@ -97,6 +97,8 @@ public class MemberService {
             throw new ResponseException(ResponseCode.MEMBER_NOT_FOUND);
         else if (!passwordEncoder.matches(password, findMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
+        else if(findMember.isDeleted())
+            throw new ResponseException(ResponseCode.MEMBER_DELETE);
     }
 
     /**
@@ -110,16 +112,16 @@ public class MemberService {
         // TODO. khj jwt 완성시 아래 주석으로 대체
         // Member loginMember = (Member) req.getAttribute("member");
         Member loginMember = Member.builder().id(1L).build();
-        Member findMember = findById(loginMember.getId());
-        MemberDto memberDto = createMemberDto(id, findMember);
+        Member findMember = findById(id);
+        MemberDto memberDto = createMemberDto(loginMember.getId(), findMember);
         return ResponseMemberDto.create(memberDto, ResponseCode.SUCCESS_SEARCH_USER);
     }
 
     /**
      * 회원 정보 DTO를 생성합니다.
      *
-     * @param id     회원 ID
-     * @param member 회원 엔티티
+     * @param id     현재 로그인한 회원 ID
+     * @param member 정보를 조회할 회원 엔티티
      * @return 변환된 회원 DTO
      */
     private MemberDto createMemberDto(Long id, Member member) {
@@ -178,7 +180,7 @@ public class MemberService {
     private void validateUpdatePassword(RequestModifyMemberDto requestDto, Member loginMember) throws ResponseException {
          if (!passwordEncoder.matches(requestDto.getPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_NOT_MATCH);
-        else if (requestDto.getNewPassword().equals(loginMember.getPassword()))
+        else if (passwordEncoder.matches(requestDto.getNewPassword(), loginMember.getPassword()))
             throw new ResponseException(ResponseCode.MEMBER_PASSWORD_DUPLICATED);
     }
 
