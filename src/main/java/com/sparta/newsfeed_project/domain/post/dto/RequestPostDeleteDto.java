@@ -2,7 +2,6 @@ package com.sparta.newsfeed_project.domain.post.dto;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class RequestPostDeleteDto {

@@ -42,7 +42,7 @@ public class PostService {
     private final PasswordEncoder passwordEncoder;
 
     @EventListener
-    public void init(ApplicationReadyEvent event) throws IOException  {
+    public void init(ApplicationReadyEvent event) throws IOException {
 
         FileInputStream serviceAccount = new FileInputStream("firebase.json");
 
@@ -87,14 +87,14 @@ public class PostService {
 
     }
 
-    public ResponsePostDto findByPostId(Long id) throws ResponseException{
+    public ResponsePostDto findByPostId(Long id) throws ResponseException {
 
         Post post = postRepository.findById(id).orElseThrow(() -> new ResponseException(ResponseCode.POST_NOT_FOUND));
         return post.to();
     }
 
     @Transactional
-    public ResponsePostDto modifyPost(Long id, RequestPostDto requestDto, HttpServletRequest req) throws ResponseException, IOException{
+    public ResponsePostDto modifyPost(Long id, RequestPostDto requestDto, HttpServletRequest req) throws ResponseException, IOException {
 
         // Member 패스워드 확인(코드 추가 필요)
         Member member = (Member) req.getAttribute("loggedInWithId");
@@ -104,7 +104,7 @@ public class PostService {
 
         // 본인 게시물을 수정하는 것이 맞는지 확인
         Post post = postRepository.findById(id).orElseThrow();
-        if(!Objects.equals(member.getId(), post.getMember().getId())) {
+        if (!Objects.equals(member.getId(), post.getMember().getId())) {
             throw new ResponseException(ResponseCode.POST_INVALID);
         }
 
@@ -131,7 +131,7 @@ public class PostService {
 
         // 본인 게시물을 수정하는 것이 맞는지 확인
         Post post = postRepository.findById(id).orElseThrow();
-        if(!Objects.equals(member.getId(), post.getMember().getId())) {
+        if (!Objects.equals(member.getId(), post.getMember().getId())) {
             throw new ResponseException(ResponseCode.POST_INVALID);
         }
 

@@ -57,7 +57,7 @@ public class PostController {
     // 게시물 수정
     @PutMapping("/{id}")
     public ResponseEntity<ResponsePostDto> modifyPost(@PathVariable Long id, @RequestBody @Valid RequestPostDto requestDto,
-                                                      HttpServletRequest req) throws ResponseException, IOException{
+                                                      HttpServletRequest req) throws ResponseException, IOException {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(postService.modifyPost(id, requestDto, req));
