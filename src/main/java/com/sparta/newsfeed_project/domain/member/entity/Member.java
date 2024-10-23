@@ -1,3 +1,5 @@
+package com.sparta.newsfeed_project.domain.member.entity;
+
 import com.sparta.newsfeed_project.domain.common.entity.Timestamped;
 import com.sparta.newsfeed_project.domain.member.dto.RequestModifyMemberDto;
 import jakarta.persistence.*;
@@ -6,10 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 회원 정보를 담는 Entity 클래스
