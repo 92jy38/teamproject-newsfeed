@@ -104,5 +104,4 @@ public class BuddiesController {
                     .build();
         }
     }
-
 }
