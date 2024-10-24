@@ -371,7 +371,46 @@
 ```
 
 ## 개체 관계도 (ERD)
-![image](https://github.com/user-attachments/assets/e24d514a-8adb-4747-a7bc-0a5b60e47741)
+```mermaid
+erDiagram
+
+MEMBER {
+   Long id PK
+   String email
+   String password
+   String nickname
+   String username
+   String introduce
+   boolean deleted
+   LocalDateTime createAt
+   LocalDateTime updateAt
+}
+POST {
+   Long id PK
+   Long memberId FK
+   String caption
+   String imgUrl
+   LocalDateTime createAt
+   LocalDateTime updateAt
+}
+COMMENT {
+   Long id PK
+   Long postId FK
+   Long memberId FK
+   String content
+   LocalDateTime createAt
+   LocalDateTime updateAt
+}
+BUDDIES {
+   Long id PK
+   Long fromUserId FK
+   Long toUserId FK
+   boolean approved
+}
+MEMBER ||--o{ POST : memberId
+MEMBER ||--o{ COMMENT : memberId
+POST ||--o{ COMMENT : postId
+```
 
 ## Application 기능 구현
 
