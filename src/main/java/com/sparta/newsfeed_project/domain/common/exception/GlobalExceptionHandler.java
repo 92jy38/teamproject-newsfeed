@@ -43,10 +43,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ResponseStatusDto> BaseException(IOException ex) {
-
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ResponseStatusDto(ResponseCode.BAD_INPUT, ex.getMessage()));
+                .body(new ResponseStatusDto(ResponseCode.INVALID_FILE_TYPE, ex.getMessage()));
     }
 
     /**

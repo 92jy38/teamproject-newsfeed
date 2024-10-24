@@ -414,7 +414,7 @@ POST ||--o{ COMMENT : postId
 
 ## Application 기능 구현
 
-### POST 회원가입
+### $\bf{\normalsize{\color{yellow}POST}}$ 회원가입
 ```
 http://localhost:8080/api/members/signup
 ```
@@ -426,7 +426,7 @@ http://localhost:8080/api/members/signup
      "username":"홍길동"
 }
 ```
-### POST 로그인
+### $\bf{\normalsize{\color{yellow}POST}}$ 로그인
 ```
 http://localhost:8080/api/members/login
 ```
@@ -436,11 +436,11 @@ http://localhost:8080/api/members/login
     "password":"a!123456789"
 }
 ```
-### GET 회원 프로필 조회
+### $\bf{\normalsize{\color{#86E57F}GET}}$ 회원 프로필 조회
 ```
 http://localhost:8080/api/members/{memberId}
 ```
-### PUT 회원 정보 수정
+### $\bf{\normalsize{\color{#6799FF}PUT}}$ 회원 정보 수정
 ```
 http://localhost:8080/api/members
 ```
@@ -454,11 +454,11 @@ http://localhost:8080/api/members
     "introduce": "안녕하세요"
 }
 ```
-### DELETE 회원 탈퇴
+### $\bf{\normalsize{\color{#F15F5F}DELETE}}$ 회원 탈퇴
 ```
 http://localhost:8080/api/members
 ```
-### POST 피드 등록
+### $\bf{\small{\color{yellow}POST}}$ 피드 등록
 ```
 http://localhost:8080/api/posts
 ```
@@ -468,11 +468,11 @@ http://localhost:8080/api/posts
     "caption" : "안녕하세요"
 }
 ```
-### GET 전체 피드 조회
+### $\bf{\small{\color{#86E57F}GET}}$ 전체 피드 조회
 ```
 http://localhost:8080/api/posts?page=1
 ```
-### PUT 피드 수정
+### $\bf{\normalsize{\color{#6799FF}PUT}}$ 피드 수정
 ```
 http://localhost:8080/api/posts/{postId}
 ```
@@ -483,11 +483,11 @@ http://localhost:8080/api/posts/{postId}
   "password": "1q2w3e4r#"
 }
 ```
-### DELETE 피드 삭제
+### $\bf{\normalsize{\color{#F15F5F}DELETE}}$ 피드 삭제
 ```
 http://localhost:8080/api/posts/{postId}
 ```
-### POST 댓글 등록
+### $\bf{\small{\color{yellow}POST}}$ 댓글 등록
 ```
 http://localhost:8080/api/comments/{postId}
 ```
@@ -496,11 +496,11 @@ http://localhost:8080/api/comments/{postId}
     "content" : "재밌게 봤습니다."
 }
 ```
-### GET 댓글 조회
+### $\bf{\small{\color{#86E57F}GET}}$ 댓글 조회
 ```
 http://localhost:8080/api/comments/post/{postId}
 ```
-### PUT 댓글 수정
+### $\bf{\normalsize{\color{#6799FF}PUT}}$ 댓글 수정
 ```
 http://localhost:8080/api/comments/{commentId}
 ```
@@ -509,11 +509,11 @@ http://localhost:8080/api/comments/{commentId}
     "content" : "수정했습니다."
 }
 ```
-### DELETE 댓글 삭제
+### $\bf{\normalsize{\color{#F15F5F}DELETE}}$ 댓글 삭제
 ```
 http://localhost:8080/api/comments/{commentId}
 ```
-### POST 팔로우
+### $\bf{\small{\color{yellow}POST}}$ 팔로우
 ```
 http://localhost:8080/api/buddies/{toUserId}
 ```
@@ -523,15 +523,15 @@ http://localhost:8080/api/buddies/{toUserId}
     "toUserId": 2
 }
 ```
-### GET 팔로우 조회
+### $\bf{\normalsize{\color{#86E57F}GET}}$ 팔로우 조회
 ```
 http://localhost:8080/api/buddies/{memberId}
 ```
-### PUT 팔로우 수락
+### $\bf{\normalsize{\color{#6799FF}PUT}}$ 팔로우 수락
 ```
 http://localhost:8080/api/buddies/{toUserId}
 ```
-### DELETE 팔로우 해제
+### $\bf{\normalsize{\color{#F15F5F}DELETE}}$ 팔로우 해제
 ```
 http://localhost:8080/api/buddies/{toUserId}
 ```

@@ -11,6 +11,7 @@ import com.sparta.newsfeed_project.domain.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,7 +37,7 @@ public class LoginService {
         // 응답 객체에 쿠키로 토큰 추가
         jwtUtil.addAsCookie(res,token);
 
-        return new ResponseStatusDto(ResponseCode.SUCCESS_LOGIN);
+        return new ResponseStatusDto(HttpStatus.OK, "로그인 성공");
     }
 
     /**
@@ -47,7 +48,7 @@ public class LoginService {
      */
     public ResponseStatusDto logout(HttpServletResponse res) throws ResponseException {
         jwtUtil.expireCookie(res);
-        return new ResponseStatusDto(ResponseCode.SUCCESS_LOGOUT);
+        return new ResponseStatusDto(HttpStatus.OK, "로그아웃 성공");
     }
 
     /**

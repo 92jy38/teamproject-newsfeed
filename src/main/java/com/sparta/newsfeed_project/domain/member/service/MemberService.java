@@ -13,6 +13,7 @@ import com.sparta.newsfeed_project.domain.post.entity.Post;
 import com.sparta.newsfeed_project.domain.post.repository.PostRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +48,7 @@ public class MemberService {
         Member member = requestDto.from(requestDto, encodingPassword);
 
         memberRepository.save(member);
-        return new ResponseStatusDto(ResponseCode.SUCCESS_CREATE_USER);
+        return new ResponseStatusDto(HttpStatus.CREATED, "회원 가입 성공");
     }
 
     /**
@@ -74,7 +75,7 @@ public class MemberService {
         Member loginMember = (Member) req.getAttribute(SUBJECT_ATTRIBUTE_KEY);
         Member findMember = findById(id);
         MemberDto memberDto = createMemberDto(loginMember.getId(), findMember);
-        return ResponseMemberDto.create(memberDto, ResponseCode.SUCCESS_SEARCH_USER);
+        return ResponseMemberDto.create(memberDto);
     }
 
     /**
@@ -124,7 +125,7 @@ public class MemberService {
         String newPassword = passwordEncoder.encoder(requestDto.getNewPassword());
         requestDto.setNewPassword(newPassword);
         updateMember.update(requestDto);
-        return new ResponseStatusDto(ResponseCode.SUCCESS_UPDATE_USER);
+        return new ResponseStatusDto(HttpStatus.OK, "유저 수정 성공");
     }
 
     /**
@@ -164,7 +165,7 @@ public class MemberService {
         deleteMemberBuddies(loginMember.getId());
         deleteMemberPosts(loginMember.getId());
 
-        return new ResponseStatusDto(ResponseCode.SUCCESS_DELETE_USER);
+        return new ResponseStatusDto(HttpStatus.NO_CONTENT, "유저 삭제 성공");
     }
 
     /**
