@@ -94,6 +94,9 @@ public class BuddiesService {
         if (buddy == null) {
             throw new ResponseException(ResponseCode.BUDDIES_NULL_ERROR);
         }
+        if (buddies.isApproved() == false || buddy.isApproved() == false) {
+            throw new ResponseException(ResponseCode.BUDDIES_NULL_ERROR);
+        }
 
         if (buddies.isApproved() == buddy.isApproved()) {
             buddiesRepository.delete(buddy);
