@@ -339,7 +339,7 @@
 
 ```plaintext
 /domain
-    ├─ buddy
+    ├─ buddies
     │  ├─ controller
     │  ├─ dto
     │  ├─ entity
@@ -354,8 +354,10 @@
     ├─ common
     │  ├─ config
     │  ├─ entity
+    │  ├─ dto
+    │  ├─ exception
     │  ├─ filter
-    │  └─ jwt
+    │  └─ util
     ├─ member
     │  ├─ controller
     │  ├─ dto
@@ -403,8 +405,8 @@ COMMENT {
 }
 BUDDIES {
    Long id PK
-   Long fromUserId FK
-   Long toUserId FK
+   Long fromUserId
+   Long toUserId
    boolean approved
 }
 MEMBER ||--o{ POST : memberId
