@@ -2,11 +2,11 @@ package com.sparta.newsfeed_project.domain.member.dto;
 
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
-import com.sparta.newsfeed_project.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 /**
  * 서버로부터 사용자 정보를 받을 때 사용하는 DTO 클래스
@@ -26,13 +26,12 @@ public class ResponseMemberDto {
      * 사용자 정보와 응답 코드를 포함하는 응답 DTO를 생성합니다.
      *
      * @param memberDto       사용자 정보 (MemberDto)
-     * @param responseCode 응답 코드
      * @return 생성된 응답 DTO 객체 (UserResponseDto)
      * @since 2024-10-21
      */
-    public static ResponseMemberDto create(MemberDto memberDto, ResponseCode responseCode) {
+    public static ResponseMemberDto create(MemberDto memberDto) {
         return ResponseMemberDto.builder()
-                .status(new ResponseStatusDto(responseCode))
+                .status(new ResponseStatusDto(HttpStatus.OK, "프로필 수정 성공"))
                 .member(memberDto)
                 .build();
     }

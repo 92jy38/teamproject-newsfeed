@@ -2,14 +2,13 @@ package com.sparta.newsfeed_project.domain.common.exception;
 
 import com.sparta.newsfeed_project.domain.common.dto.ResponseStatusDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.logging.Logger;
+import java.io.IOException;
 
 /**
  * 예외 처리 클래스.
@@ -35,6 +34,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseStatusDto(ResponseCode.BAD_INPUT, errorMsg));
+    }
+
+    /**
+     * 이미지 업로드/다운로드 시 발생할 수 있는 예외 처리
+     *
+     * @since 2024-10-23
+     */
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ResponseStatusDto> BaseException(IOException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseStatusDto(ResponseCode.INVALID_FILE_TYPE, ex.getMessage()));
     }
 
     /**

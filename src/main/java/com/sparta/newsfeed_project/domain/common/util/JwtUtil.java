@@ -1,5 +1,7 @@
-package com.sparta.newsfeed_project.domain.common.jwt;
+package com.sparta.newsfeed_project.domain.common.util;
 
+import com.sparta.newsfeed_project.domain.common.exception.ResponseCode;
+import com.sparta.newsfeed_project.domain.common.exception.ResponseException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -36,12 +38,6 @@ public class JwtUtil {
         secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public void testInit() {
-        stringKey = "ZXhhbXBsZSB0ZXN0IHNlY3JldCBrZXk=";
-        byte[] keyBytes = stringKey.getBytes();
-        secretKey = Keys.hmacShaKeyFor(keyBytes);
-    }
-
     // subject 문자열을 전달하면, 갖춰진 정보를 토대로 전체 JWT 토큰 문자열을 반환해주는 메서드
     public String createTokenString(String subject) {
         Date issuedAt = new Date();
@@ -62,11 +58,11 @@ public class JwtUtil {
     public void addAsCookie(HttpServletResponse response, String value) {
         try {
             String serializedValue = URLEncoder.encode(value, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, createTokenString(serializedValue));
+            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, serializedValue);
             cookie.setPath("/");
             response.addCookie(cookie);
         } catch (RuntimeException ex) {
-            throw new RuntimeException("인가 토큰 발행 중 오류.("+ex.getMessage()+")",ex.getCause());
+            throw new ResponseException(ResponseCode.UNKNOWN_ERROR);
         }
     }
 
@@ -83,7 +79,7 @@ public class JwtUtil {
         if (StringUtils.hasText(withPrefix) && withPrefix.startsWith(BEARER_PREFIX)) {
             return withPrefix.substring(BEARER_PREFIX.length());
         } else {
-            throw new RuntimeException("토큰 형식이 올바르지 않습니다.");
+            throw new ResponseException(ResponseCode.TOKEN_UNSUPPORTED);
         }
     }
 
@@ -92,7 +88,7 @@ public class JwtUtil {
         try {
             return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
         } catch (RuntimeException ex) {
-            throw new RuntimeException("토큰이 유효하지 않습니다.", ex.getCause());
+            throw new ResponseException(ResponseCode.TOKEN_UNSIGNED);
         }
     }
 
@@ -112,11 +108,11 @@ public class JwtUtil {
                     try {
                         return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
                     } catch (RuntimeException ex) {
-                        throw new RuntimeException("토큰 값을 해석할 수 없습니다.", ex);
+                        throw new ResponseException(ResponseCode.TOKEN_INVALID);
                     }
                 }
             }
         }
-        throw new RuntimeException("토큰이 없거나 만료되었습니다.");
+        throw new ResponseException(ResponseCode.TOKEN_TIMEOUT);
     }
 }
