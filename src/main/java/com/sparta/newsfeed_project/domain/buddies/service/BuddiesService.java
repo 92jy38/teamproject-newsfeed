@@ -87,16 +87,18 @@ public class BuddiesService {
         if (buddies == null) {
             throw new ResponseException(ResponseCode.BUDDIES_NULL_ERROR);
         }
-        buddies.approved(false);
 
         Buddies buddy = buddiesRepository
                 .findOneByFromUserIdAndToUserId(userId, memberId);
         if (buddy == null) {
             throw new ResponseException(ResponseCode.BUDDIES_NULL_ERROR);
         }
-        if (buddies.isApproved() == false || buddy.isApproved() == false) {
+
+        if (!buddies.isApproved() || !buddy.isApproved()) {
             throw new ResponseException(ResponseCode.BUDDIES_NULL_ERROR);
         }
+
+        buddies.approved(false);
 
         if (buddies.isApproved() == buddy.isApproved()) {
             buddiesRepository.delete(buddy);

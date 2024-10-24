@@ -88,7 +88,6 @@ public class PostService {
     }
 
     public ResponsePostDto findByPostId(Long id) throws ResponseException {
-
         Post post = postRepository.findById(id).orElseThrow(() -> new ResponseException(ResponseCode.POST_NOT_FOUND));
         return post.to();
     }
